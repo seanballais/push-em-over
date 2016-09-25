@@ -13,6 +13,15 @@ public class GamePreferences
         prefs = Gdx.app.getPreferences( "PEO Preferences" );
     }
 
+    public static void setName ( int player_num, String player_name )
+    {
+        if ( player_num == 0 ) { // Player 1
+            prefs.putString ( "p1_name", player_name);
+        } else if ( player_num == 1 ) { // Player 2
+            prefs.putString ( "p2_name", player_name );
+        }
+    }
+
     public static void setJumpKey ( int player_num, int jump_key )
     {
         if ( player_num == 0 ) { // Player 1 Jump Key
@@ -46,6 +55,13 @@ public class GamePreferences
             prefs.putInteger ( "p1_punch", punch_key );
         } else if ( player_num == 1 ) { // Player 2 Left Key
             prefs.putInteger ( "p2_punch", punch_key );
+        }
+    }
+
+    public static static getName ( int player_num )
+    {
+        if ( player_num == 0 ) { // Player 1 Name
+
         }
     }
 
