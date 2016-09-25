@@ -58,6 +58,16 @@ public class GamePreferences
         }
     }
 
+    public static void setWidthResolution ( int width )
+    {
+        prefs.putInteger ( "res_width", width );
+    }
+
+    public static void setHeightResolution ( int height )
+    {
+        prefs.putInteger ( "res_height", height );
+    }
+
     public static static getName ( int player_num )
     {
         if ( player_num == 0 ) { // Player 1 Name
@@ -99,5 +109,15 @@ public class GamePreferences
         } else if ( player_num == 1 ) { // Player 2 Punch Key
             return prefs.getInteger ( "p1_punch", Input.Keys.SHIFT_RIGHT );
         }
+    }
+
+    public static int getWidthResolution ()
+    {
+        return prefs.getInteger ( "res_width", 800 );
+    }
+
+    public static int getHeightResolution ()
+    {
+        return prefs.getInteger ( "res_height", 600 );
     }
 }
