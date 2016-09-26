@@ -69,7 +69,12 @@ public class GamePreferences
         prefs.putInteger ( "res_height", height );
     }
 
-    public static String getName ( int player_num )
+    public static void setFullscreen ( boolean fullscreen )
+    {
+        prefs.putBoolean ( "res_full", fullscreen );
+    }
+
+    public static String getName ( int player_num ) throws PlayerNotFoundException
     {
         if ( player_num == 0 ) { // Player 1 Name
             return prefs.getString ( "p1_name", "Player 1" );
@@ -80,7 +85,7 @@ public class GamePreferences
         throw new PlayerNotFoundException ( "Player numbers exceeds that of the available number of players (2)." );
     }
 
-    public static int getJumpKey ( int player_num )
+    public static int getJumpKey ( int player_num ) throws PlayerNotFoundException
     {
         if ( player_num == 0 ) { // Player 1 Jump Key
             return prefs.getInteger ( "p1_jump", Input.Keys.W );
@@ -91,7 +96,7 @@ public class GamePreferences
         throw new PlayerNotFoundException ( "Player numbers exceeds that of the available number of players (2)." );
     }
 
-    public static int getLeftKey ( int player_num )
+    public static int getLeftKey ( int player_num ) throws PlayerNotFoundException
     {
         if ( player_num == 0 ) { // Player 1 Left Key
             return prefs.getInteger ( "p1_left", Input.Keys.A );
@@ -102,7 +107,7 @@ public class GamePreferences
         throw new PlayerNotFoundException ( "Player numbers exceeds that of the available number of players (2)." );
     }
 
-    public static int getRightKey ( int player_num )
+    public static int getRightKey ( int player_num ) throws PlayerNotFoundException
     {
         if ( player_num == 0 ) { // Player 1 Right Key
             return prefs.getInteger ( "p1_right", Input.Keys.D );
@@ -113,7 +118,7 @@ public class GamePreferences
         throw new PlayerNotFoundException ( "Player numbers exceeds that of the available number of players (2)." );
     }
 
-    public static int getPunchKey ( int player_num )
+    public static int getPunchKey ( int player_num ) throws PlayerNotFoundException
     {
         if ( player_num == 0 ) { // Player 1 Punch Key
             return prefs.getInteger ( "p1_punch", Input.Keys.F );
@@ -126,12 +131,17 @@ public class GamePreferences
 
     public static int getWidthResolution ()
     {
-        return prefs.getInteger ( "res_width", 800 );
+        return prefs.getInteger ( "res_width", 1366 );
     }
 
     public static int getHeightResolution ()
     {
-        return prefs.getInteger ( "res_height", 600 );
+        return prefs.getInteger ( "res_height", 768 );
+    }
+
+    public static boolean isFullscreen ()
+    {
+        return prefs.getBoolean ( "res_full", true );
     }
 
     public static void save ()
