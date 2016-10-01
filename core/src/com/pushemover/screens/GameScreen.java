@@ -21,7 +21,7 @@ public class GameScreen extends AbstractScreen
     {
         delta = Math.min ( 0.06f, Gdx.graphics.getDeltaTime () );
 
-        Gdx.gl.glClearColor ( 0.1f, 0.1f, 0.1f, 1 );
+        Gdx.gl.glClearColor ( 111/255f, 169/255f, 235/255f, 1 );
         Gdx.gl.glClear ( GL20.GL_COLOR_BUFFER_BIT );
 
         if ( Gdx.input.isKeyPressed ( Input.Keys.ESCAPE ) ) {

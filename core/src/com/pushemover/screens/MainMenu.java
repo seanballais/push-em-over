@@ -35,6 +35,10 @@ public class MainMenu extends AbstractScreen
 
         time += delta;
         if ( time > 1 ) {
+            if ( Gdx.input.isKeyPressed ( Input.Keys.ESCAPE ) ) {
+                Gdx.app.exit ();
+            }
+
             if ( Gdx.input.isKeyPressed ( Input.Keys.ANY_KEY ) ) {
                 game.setScreen ( new IntroScreen ( game ) );
             }
