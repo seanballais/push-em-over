@@ -23,7 +23,7 @@ public class GameScreen extends AbstractScreen
         started = false;
 
         platforms = new Platform [ 10 ];
-        for ( int ctr = 0; ctr < 10; ctr++ ) {
+        for ( int ctr = 0; ctr < platforms.length; ctr++ ) {
             platforms [ ctr ] = new Platform ();
             game_stage.addActor ( platforms[ ctr ] );
         }
@@ -65,24 +65,37 @@ public class GameScreen extends AbstractScreen
     {
         Random rand = new Random ();
         int col_width = Gdx.graphics.getWidth () / platforms.length;
-        int row_height = Gdx.graphics.getHeight () / ( platforms.length + 5 );
+        int row_height = Gdx.graphics.getHeight () / ( platforms.length + 7 );
         boolean [] used_row = new boolean [ platforms.length + 5 ];
-        for ( int ctr = 0; ctr < platforms.length; ctr++ ) {
-            if ( !started ) {
-                platforms [ ctr ].setXPos ( col_width * ctr );
+        for ( int ctr = 0; ctr < platforms.length / 2; ctr++ ) {
+            if (!started) {
+                platforms[ctr].setXPos( ( col_width + platforms [ ctr ].getTextureWidth () ) * ctr );
+                platforms[ctr].setXPos( ( col_width + platforms [ ctr ].getTextureWidth () ) * ctr );
 
                 int row = rand.nextInt ( platforms.length + 4 );
                 while ( used_row [ row ] ) {
                     row = rand.nextInt ( platforms.length + 4 );
                 }
-                used_row [ row ] = true;
+                used_row[row] = true;
 
-                platforms [ ctr ].setYPos( row * row_height );
+                platforms [ ctr ].setYPos ( row * row_height );
+                platforms [ ctr + 5 ].setYPos ( ( row * row_height ) * 2 );
             } else {
-                if ( platforms[ ctr ].getYPos () < -2 ) {
-                    platforms [ ctr ].setYPos ( Gdx.graphics.getHeight () + rand.nextInt ( 50 ) + 50 );
-                    platforms [ ctr ].setYDelta ( rand.nextInt ( 4 ) + 1 );
+                if ( platforms [ ctr ].getYPos () < ( -1 * ( platforms [ ctr ].getTextureHeight () ) ) ) {
+                    platforms [ ctr ].setYPos ( Gdx.graphics.getHeight () + 100 );
                 }
+
+                if ( platforms [ ctr + 5 ].getYPos () < ( -1 * ( platforms [ ctr + 5 ].getTextureHeight () ) ) ) {
+                    platforms [ ctr + 5 ].setYPos ( Gdx.graphics.getHeight () + 300 );
+                }
+            }
+        }
+
+        if ( !started ) {
+            for ( int ctr = 0; ctr < platforms.length / 2; ctr++ ) {
+                int newYDelta = rand.nextInt ( 4 ) + 1;
+                platforms [ ctr ].setYDelta ( newYDelta );
+                platforms [ ctr + 5 ].setYDelta ( newYDelta );
             }
         }
 
