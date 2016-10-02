@@ -64,17 +64,23 @@ public class GameScreen extends AbstractScreen
     private void handlePlatformPositions ()
     {
         Random rand = new Random ();
+        int col_width = Gdx.graphics.getWidth () / platforms.length;
+        int row_height = Gdx.graphics.getHeight () / ( platforms.length + 5 );
+        boolean [] used_row = new boolean [ platforms.length ];
         for ( int ctr = 0; ctr < platforms.length; ctr++ ) {
-            int x_pos = rand.nextInt ( Gdx.graphics.getWidth () - platforms[ ctr ].getTextureWidth () );
-            int y_pos = rand.nextInt ( Gdx.graphics.getHeight () );
-
             if ( !started ) {
-                platforms[ ctr ].setYPos( y_pos );
-                platforms[ ctr ].setXPos ( x_pos );
+                platforms[ ctr ].setXPos ( col_width * ctr );
+
+                int row = rand.nextInt ( platforms.length + 4 );
+                while ( used_row [ row ] ) {
+                    row = rand.nextInt ( platforms.length + 4 );
+                }
+                used_row [ row ] = true;
+
+                platforms[ ctr ].setYPos( row * row_height );
             } else {
                 if ( platforms[ ctr ].getYPos () < -2 ) {
-                    platforms[ ctr ].setYPos ( Gdx.graphics.getHeight () );
-                    platforms[ ctr ].setXPos ( x_pos );
+                    platforms[ ctr ].setYPos ( Gdx.graphics.getHeight () + rand.nextInt ( 30 ) );
                 }
             }
         }
