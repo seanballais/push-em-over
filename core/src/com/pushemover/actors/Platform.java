@@ -37,7 +37,7 @@ public class Platform extends Actor {
     }
 
     public void setYDelta(int y_delta) {
-        this.y_delta = y_delta;
+        this.y_delta = -1 * y_delta;
     }
 
     public int getXPos() {

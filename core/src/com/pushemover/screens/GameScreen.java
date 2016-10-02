@@ -69,7 +69,7 @@ public class GameScreen extends AbstractScreen
         boolean [] used_row = new boolean [ platforms.length + 5 ];
         for ( int ctr = 0; ctr < platforms.length; ctr++ ) {
             if ( !started ) {
-                platforms[ ctr ].setXPos ( col_width * ctr );
+                platforms [ ctr ].setXPos ( col_width * ctr );
 
                 int row = rand.nextInt ( platforms.length + 4 );
                 while ( used_row [ row ] ) {
@@ -77,10 +77,11 @@ public class GameScreen extends AbstractScreen
                 }
                 used_row [ row ] = true;
 
-                platforms[ ctr ].setYPos( row * row_height );
+                platforms [ ctr ].setYPos( row * row_height );
             } else {
                 if ( platforms[ ctr ].getYPos () < -2 ) {
-                    platforms[ ctr ].setYPos ( Gdx.graphics.getHeight () + rand.nextInt ( 50 ) + 50 );
+                    platforms [ ctr ].setYPos ( Gdx.graphics.getHeight () + rand.nextInt ( 50 ) + 50 );
+                    platforms [ ctr ].setYDelta ( rand.nextInt ( 4 ) + 1 );
                 }
             }
         }
