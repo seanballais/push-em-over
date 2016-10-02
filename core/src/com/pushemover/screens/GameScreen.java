@@ -66,7 +66,7 @@ public class GameScreen extends AbstractScreen
         Random rand = new Random ();
         int col_width = Gdx.graphics.getWidth () / platforms.length;
         int row_height = Gdx.graphics.getHeight () / ( platforms.length + 5 );
-        boolean [] used_row = new boolean [ platforms.length ];
+        boolean [] used_row = new boolean [ platforms.length + 5 ];
         for ( int ctr = 0; ctr < platforms.length; ctr++ ) {
             if ( !started ) {
                 platforms[ ctr ].setXPos ( col_width * ctr );
