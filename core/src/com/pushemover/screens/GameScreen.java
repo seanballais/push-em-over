@@ -80,7 +80,7 @@ public class GameScreen extends AbstractScreen
                 platforms[ ctr ].setYPos( row * row_height );
             } else {
                 if ( platforms[ ctr ].getYPos () < -2 ) {
-                    platforms[ ctr ].setYPos ( Gdx.graphics.getHeight () + rand.nextInt ( 30 ) );
+                    platforms[ ctr ].setYPos ( Gdx.graphics.getHeight () + rand.nextInt ( 50 ) + 50 );
                 }
             }
         }
