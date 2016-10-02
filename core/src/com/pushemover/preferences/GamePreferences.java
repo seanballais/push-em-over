@@ -142,7 +142,7 @@ public class GamePreferences
     public boolean isFullscreen ()
     {
         return prefs.getBoolean ( "res_full", false );
-    }
+    } // Set fullscreen true by default next time
 
     public void save ()
     {
