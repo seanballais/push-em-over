@@ -22,7 +22,7 @@ public class FlockSeparation
         int numCloseBoids = 0;
 
         for ( Point boidPoint : platformPoints ) {
-            float dist = vectorDistanceBetween ( platformPoints[pointIndex], boidPoint );
+            float dist = VectorOperations.distanceBetween ( platformPoints[pointIndex], boidPoint );
             if ( ( dist > 0 ) && ( dist < separationDistance ) ) {
 
             }
