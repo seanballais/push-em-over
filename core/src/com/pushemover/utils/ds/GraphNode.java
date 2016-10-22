@@ -19,7 +19,9 @@ public class GraphNode
 
     public void addNeighbour ( GraphNode node )
     {
-        neighbours.add ( node );
+        if ( !neighbours.contains ( node ) ) {
+            neighbours.add ( node );
+        }
     }
 
     public void removeNeighbour ( GraphNode node )
@@ -43,5 +45,10 @@ public class GraphNode
         int yDist = Math.abs ( y - node.y );
 
         return Math.sqrt ( Math.pow( xDist, 2 ) + Math.pow ( yDist, 2 ) );
+    }
+
+    public int getNumNeighbours ()
+    {
+        return neighbours.size ();
     }
 }
