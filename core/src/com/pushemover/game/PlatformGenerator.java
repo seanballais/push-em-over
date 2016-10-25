@@ -42,7 +42,7 @@ public class PlatformGenerator
 
             // Make sure the next node has not been selected yet.
             while ( currNode.getNeighbourWithIndex( new Random ().nextInt ( currNode.getNumNeighbours() ) ).selected ) {
-                currNode = currNode.getNeighbourWithIndex( new Random ().nextInt ( currNode.getNumNeighbours() ) );
+                currNode = currNode.getNeighbourWithIndex( new Random ().nextInt ( currNode.getNumNeighbours () ) );
             }
         }
 
@@ -91,7 +91,7 @@ public class PlatformGenerator
         // Note: Every n is a neighbour of the node N.
 
         // Add the rightmost neighbour relative to the current node.
-        int neighbourCol = Math.min ( nodeCol + 1, nodes [ 0 ].length);
+        int neighbourCol = Math.min ( nodeCol + 1, nodes [ 0 ].length - 1);
         nodes [ nodeRow ][ nodeCol ].addNeighbour ( nodes [ nodeRow ][ neighbourCol ] );
 
         // Add the upper right neighbour relative to the current node
@@ -109,14 +109,14 @@ public class PlatformGenerator
         nodes [ nodeRow ][ nodeCol ].addNeighbour ( nodes [ nodeRow ][ neighbourCol ] );
 
         // Add the bottom left neighbour relative to the current node
-        neighbourRow = Math.min ( nodeRow + 1, nodes.length );
+        neighbourRow = Math.min ( nodeRow + 1, nodes.length - 1 );
         nodes [ nodeRow ][ nodeCol ].addNeighbour ( nodes [ neighbourRow ][ neighbourCol ] );
 
         // Add the bottom neighbour relative to the current node
         nodes [ nodeRow ][ nodeCol ].addNeighbour ( nodes [ neighbourRow ][ nodeCol ]);
 
         // Add the bottom right neighbour relative to the current node
-        neighbourCol = Math.min ( nodeCol + 1, nodes [ 0 ].length );
+        neighbourCol = Math.min ( nodeCol + 1, nodes [ 0 ].length - 1 );
         nodes [ nodeRow ][ nodeCol ].addNeighbour ( nodes [ neighbourRow ][ neighbourCol ] );
     }
 }

@@ -30,4 +30,9 @@ public class Graph
     {
         return nodes.get ( index );
     }
+
+    public int numNodes ()
+    {
+        return nodes.size ();
+    }
 }

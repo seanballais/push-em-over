@@ -5,16 +5,26 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.pushemover.actors.Platform;
+import com.pushemover.handlers.PlatformHandler;
+
+import java.util.ArrayList;
 
 public class GameScreen extends AbstractScreen
 {
     private Stage game_stage;
+    private ArrayList < Platform > platforms;
 
     public GameScreen ( Game game )
     {
-        super(game);
+        super ( game );
 
         game_stage = new Stage ();
+        platforms = new PlatformHandler ().getPlatforms ();
+
+        for ( Platform platform : platforms ) {
+            game_stage.addActor ( platform );
+        }
     }
 
     @Override public void dispose ()
