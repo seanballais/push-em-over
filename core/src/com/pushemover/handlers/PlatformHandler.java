@@ -1,9 +1,7 @@
 package com.pushemover.handlers;
 
 import com.pushemover.actors.Platform;
-import com.pushemover.game.PlatformGenerator;
-import com.pushemover.utils.ds.Graph;
-import com.pushemover.utils.ds.GraphNode;
+import com.pushemover.preferences.GamePreferences;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -11,34 +9,39 @@ import java.util.Random;
 public class PlatformHandler
 {
     private ArrayList < Platform > platforms;
+    private GamePreferences gprefs;
 
     public PlatformHandler ()
     {
         platforms = new ArrayList < Platform > ();
+        gprefs = new GamePreferences ();
     }
 
     public ArrayList < Platform > getPlatforms ()
     {
-        addPointsToPlatforms();
-
+        setPlatforms ( 20 );
         return platforms;
     }
 
-    private void addPointsToPlatforms ()
+    public void loopPosition ( Platform platform )
     {
-        PlatformGenerator pGenerator = new PlatformGenerator ();
-        Graph generatedGraph = pGenerator.getGeneratedGraph ( new Random ().nextInt ( 10 ) + 15 );
+        if ( platform.y < ( -platform.getTextureHeight ()) ) {
+            int screenWidth = gprefs.getWidthResolution ();
+            int randomX = new Random ().nextInt ( 10 ) * ( screenWidth / 10 );
 
-        GraphNode node;
-        Platform platform;
-        for ( int ctr = 0; ctr < generatedGraph.numNodes (); ctr++ ) {
-            platform = new Platform ();
+            platform.x = randomX;
+            platform.y = gprefs.getHeightResolution () + platform.getTextureHeight ();
+        }
+    }
 
-            node = generatedGraph.getNodeWithIndex ( ctr );
-            platform.x = node.x;
-            platform.y = node.y;
-
-            platforms.add ( platform );
+    private void setPlatforms ( int numPlatforms )
+    {
+        int screenHeight = gprefs.getHeightResolution ();
+        int screenWidth = gprefs.getWidthResolution ();
+        for ( int ctr = 0; ctr < numPlatforms; ctr++ ) {
+            int randomX = new Random ().nextInt ( 10 ) * ( screenWidth / 10 );
+            int randomY = new Random ().nextInt ( 5 ) * ( screenHeight / 5 );
+            platforms.add ( new Platform( randomX, randomY, 2 ) );
         }
     }
 }

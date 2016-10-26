@@ -21,9 +21,15 @@ public class Platform extends Actor {
 
     public Platform ( int x, int y, int deltaY )
     {
+        platform_texture = new Texture(Gdx.files.internal("data/img/game_screen/platform.png"));
         this.x = x;
         this.y = y;
         this.deltaY = deltaY;
+    }
+
+    public int getTextureHeight ()
+    {
+        return platform_texture.getHeight ();
     }
 
     @Override public void draw ( Batch batch, float alpha )
@@ -33,6 +39,6 @@ public class Platform extends Actor {
 
     @Override public void act ( float delta )
     {
-        //y -= deltaY;
+        y -= deltaY;
     }
 }

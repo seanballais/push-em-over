@@ -14,16 +14,18 @@ public class GameScreen extends AbstractScreen
 {
     private Stage game_stage;
     private ArrayList < Platform > platforms;
+    private PlatformHandler pHandler;
 
     public GameScreen ( Game game )
     {
         super ( game );
 
         game_stage = new Stage ();
-        platforms = new PlatformHandler ().getPlatforms ();
+        pHandler = new PlatformHandler ();
+        platforms = pHandler.getPlatforms ();
 
-        for ( Platform platform : platforms ) {
-            game_stage.addActor ( platform );
+        for ( int ctr = 0; ctr < platforms.size (); ctr++ ) {
+            game_stage.addActor ( platforms.get( ctr ) );
         }
     }
 
@@ -41,6 +43,11 @@ public class GameScreen extends AbstractScreen
 
         game_stage.act ( delta );
         game_stage.draw ();
+
+        // Return the platform to the top if it went below the screen already.
+        for ( int ctr = 0; ctr < platforms.size (); ctr++ ) {
+            pHandler.loopPosition ( platforms.get ( ctr ) );
+        }
 
         if ( Gdx.input.isKeyPressed ( Input.Keys.ESCAPE ) ) {
             game.setScreen ( new MainMenu ( game ) );
