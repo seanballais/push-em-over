@@ -1,5 +1,7 @@
 package com.pushemover.handlers;
 
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.World;
 import com.pushemover.actors.Platform;
 import com.pushemover.preferences.GamePreferences;
 
@@ -17,9 +19,9 @@ public class PlatformHandler
         gprefs = new GamePreferences ();
     }
 
-    public ArrayList < Platform > getPlatforms ()
+    public ArrayList < Platform > getPlatforms ( World gameWorld )
     {
-        setPlatforms ( 20 );
+        setPlatforms ( 20, gameWorld );
         return platforms;
     }
 
@@ -34,14 +36,18 @@ public class PlatformHandler
         }
     }
 
-    private void setPlatforms ( int numPlatforms )
+    private void setPlatforms ( int numPlatforms, World gameWorld )
     {
+        BodyDef platformDef = new BodyDef ();
+
         int screenHeight = gprefs.getHeightResolution ();
         int screenWidth = gprefs.getWidthResolution ();
         for ( int ctr = 0; ctr < numPlatforms; ctr++ ) {
             int randomX = new Random ().nextInt ( 10 ) * ( screenWidth / 10 );
             int randomY = new Random ().nextInt ( 5 ) * ( screenHeight / 5 );
-            platforms.add ( new Platform( randomX, randomY, 2 ) );
+            platformDef.position.set ( ( float ) randomX, ( float ) randomY );
+
+            platforms.add ( new Platform( randomX, randomY, 1, gameWorld, platformDef ) );
         }
     }
 }
