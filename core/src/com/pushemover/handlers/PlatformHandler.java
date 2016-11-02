@@ -25,8 +25,15 @@ public class PlatformHandler
         return platforms;
     }
 
-    public void teleportPlatform ( Platform platform )
+    public void updatePlatforms ()
     {
+        int originY = gprefs.getHeightResolution () + platforms.get ( 0 ).getTextureHeight ();
+        for ( Platform p : platforms ) {
+            if ( ( int ) p.getBody ().getPosition ().y < -platforms.get ( 0 ).getTextureHeight () ) {
+                int randomX = new Random ().nextInt ( 10 ) * ( gprefs.getWidthResolution () / 10 );
+                p.getBody ().setTransform ( ( float ) randomX, ( float ) originY, 0f );
+            }
+        }
     }
 
     private void setPlatforms ( int numPlatforms, World gameWorld )

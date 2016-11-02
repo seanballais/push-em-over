@@ -48,6 +48,7 @@ public class GameScreen extends AbstractScreen
         debugRenderer.render ( gameWorld, cameraCopy.scl ( Constants.BOX_TO_WORLD ) );
         gameWorld.step ( 1/60f, 6, 2 );
 
+        pHandler.updatePlatforms ();
         game_stage.act ( delta );
         game_stage.draw ();
 

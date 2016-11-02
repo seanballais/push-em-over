@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.pushemover.preferences.GamePreferences;
 import com.pushemover.utils.Constants;
 
 public class Platform extends Actor
@@ -31,12 +30,11 @@ public class Platform extends Actor
         this.platformBody = world.createBody ( platformBodyDef );
         this.platformSprite = new Sprite ( platform_texture );
 
-        GamePreferences gprefs = new GamePreferences ();
         PolygonShape platformBounds = new PolygonShape ();
-        platformBounds.setAsBox ( gprefs.getWidthResolution () * Constants.WORLD_TO_BOX,
-                                  gprefs.getHeightResolution () * Constants.WORLD_TO_BOX );
+        platformBounds.setAsBox ( getTextureWidth () * Constants.WORLD_TO_BOX,
+                                  getTextureHeight () * Constants.WORLD_TO_BOX );
         platformBody.createFixture ( platformBounds, 1f );
-        platformBody.setLinearVelocity ( 0.0f, -1.0f );
+        platformBody.setLinearVelocity ( 0.0f, -100f );
     }
 
     public int getTextureHeight ()
@@ -53,16 +51,16 @@ public class Platform extends Actor
 
         platformSprite.setRotation ( platformBody.getAngle () * 180 / ( float ) Math.PI ); // Convert radians to degrees
         platformSprite.setOrigin ( this.getTextureWidth () / 2, getTextureHeight () / 2 );
-        platformSprite.setPosition ( platformBody.getPosition ().x - this.getTextureWidth () / 2,
-                                     platformBody.getPosition ().y - this.getTextureHeight () / 2 );
+        platformSprite.setPosition ( platformBody.getPosition ().x - ( float ) this.getTextureWidth () / 2,
+                                     platformBody.getPosition ().y - ( float ) this.getTextureHeight () / 2 );
         platformSprite.setSize ( this.getTextureWidth (), this.getTextureHeight () );
         platformSprite.draw ( batch );
     }
 
     @Override public void act ( float delta )
     {
-        float newXPos = platformBody.getPosition ().x;
-        float newYPos = platformBody.getPosition ().y;
+        float newXPos = platformBody.getPosition ().x * Constants.BOX_TO_WORLD;
+        float newYPos = platformBody.getPosition ().y * Constants.BOX_TO_WORLD;
         platformSprite.setPosition ( newXPos, newYPos );
     }
 }
