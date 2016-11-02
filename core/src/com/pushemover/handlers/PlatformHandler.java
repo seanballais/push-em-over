@@ -25,15 +25,8 @@ public class PlatformHandler
         return platforms;
     }
 
-    public void loopPosition ( Platform platform )
+    public void teleportPlatform ( Platform platform )
     {
-        if ( platform.y < ( -platform.getTextureHeight ()) ) {
-            int screenWidth = gprefs.getWidthResolution ();
-            int randomX = new Random ().nextInt ( 10 ) * ( screenWidth / 10 );
-
-            platform.x = randomX;
-            platform.y = gprefs.getHeightResolution () + platform.getTextureHeight ();
-        }
     }
 
     private void setPlatforms ( int numPlatforms, World gameWorld )
@@ -46,6 +39,7 @@ public class PlatformHandler
             int randomX = new Random ().nextInt ( 10 ) * ( screenWidth / 10 );
             int randomY = new Random ().nextInt ( 5 ) * ( screenHeight / 5 );
             platformDef.position.set ( ( float ) randomX, ( float ) randomY );
+            platformDef.type = BodyDef.BodyType.KinematicBody;
 
             platforms.add ( new Platform( randomX, randomY, 1, gameWorld, platformDef ) );
         }

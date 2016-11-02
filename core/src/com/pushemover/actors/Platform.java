@@ -36,6 +36,7 @@ public class Platform extends Actor
         platformBounds.setAsBox ( gprefs.getWidthResolution () * Constants.WORLD_TO_BOX,
                                   gprefs.getHeightResolution () * Constants.WORLD_TO_BOX );
         platformBody.createFixture ( platformBounds, 1f );
+        platformBody.setLinearVelocity ( 0.0f, -1.0f );
     }
 
     public int getTextureHeight ()
@@ -43,6 +44,8 @@ public class Platform extends Actor
         return platform_texture.getHeight ();
     }
     public int getTextureWidth () { return platform_texture.getWidth (); }
+    public Body getBody () { return platformBody; }
+    public Sprite getSprite () { return platformSprite; }
 
     @Override public void draw ( Batch batch, float alpha )
     {
@@ -58,6 +61,8 @@ public class Platform extends Actor
 
     @Override public void act ( float delta )
     {
-        y -= deltaY;
+        float newXPos = platformBody.getPosition ().x;
+        float newYPos = platformBody.getPosition ().y;
+        platformSprite.setPosition ( newXPos, newYPos );
     }
 }

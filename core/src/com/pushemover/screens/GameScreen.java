@@ -46,17 +46,10 @@ public class GameScreen extends AbstractScreen
 
         Matrix4 cameraCopy = camera.combined.cpy ();
         debugRenderer.render ( gameWorld, cameraCopy.scl ( Constants.BOX_TO_WORLD ) );
+        gameWorld.step ( 1/60f, 6, 2 );
 
         game_stage.act ( delta );
-
-        // Return the platform to the top if it went below the screen already.
-        for ( int ctr = 0; ctr < platforms.size (); ctr++ ) {
-            pHandler.loopPosition ( platforms.get ( ctr ) );
-        }
-
         game_stage.draw ();
-
-        gameWorld.step ( 1/60f, 6, 2 );
 
         if ( Gdx.input.isKeyPressed ( Input.Keys.ESCAPE ) ) {
             game.setScreen ( new MainMenu ( game ) );
@@ -66,17 +59,17 @@ public class GameScreen extends AbstractScreen
     @Override public void show ()
     {
         game_stage = new Stage ();
-        pHandler = new PlatformHandler ();
         gameWorld = new World ( new Vector2 ( 0, -10 ), true );
         camera = new OrthographicCamera ();
         debugRenderer = new Box2DDebugRenderer ();
+        pHandler = new PlatformHandler ();
         platforms = pHandler.getPlatforms ( gameWorld );
 
         for ( int ctr = 0; ctr < platforms.size (); ctr++ ) {
             game_stage.addActor ( platforms.get( ctr ) );
         }
 
-        camera.setToOrtho ( false );
+        camera.setToOrtho ( true );
     }
 
     @Override public void hide ()
