@@ -14,19 +14,15 @@ import com.pushemover.utils.Constants;
 public class Platform extends Actor
 {
     private static Texture platform_texture;
-    private int deltaY;
     private Body platformBody;
     private Sprite platformSprite;
 
     public int x;
     public int y;
 
-    public Platform ( int x, int y, int deltaY, World world, BodyDef platformBodyDef )
+    public Platform ( World world, BodyDef platformBodyDef )
     {
         platform_texture = new Texture(Gdx.files.internal("data/img/game_screen/platform.png"));
-        this.x = x;
-        this.y = y;
-        this.deltaY = deltaY;
         this.platformBody = world.createBody ( platformBodyDef );
         this.platformSprite = new Sprite ( platform_texture );
 

@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pushemover.actors.Platform;
+import com.pushemover.actors.Player;
 import com.pushemover.handlers.PlatformHandler;
 import com.pushemover.utils.Constants;
 
@@ -24,6 +25,7 @@ public class GameScreen extends AbstractScreen
     private Stage game_stage;
     private ArrayList < Platform > platforms;
     private PlatformHandler pHandler;
+    private Player player;
 
     public GameScreen ( Game game )
     {
@@ -41,7 +43,7 @@ public class GameScreen extends AbstractScreen
 
         camera.update ();
 
-        Gdx.gl.glClearColor ( 111/255f, 169/255f, 235/255f, 1 );
+        //Gdx.gl.glClearColor ( 111/255f, 169/255f, 235/255f, 1 );
         Gdx.gl.glClear ( GL20.GL_COLOR_BUFFER_BIT );
 
         Matrix4 cameraCopy = camera.combined.cpy ();
@@ -65,10 +67,13 @@ public class GameScreen extends AbstractScreen
         debugRenderer = new Box2DDebugRenderer ();
         pHandler = new PlatformHandler ();
         platforms = pHandler.getPlatforms ( gameWorld );
+        player = new Player( gameWorld );
 
         for ( int ctr = 0; ctr < platforms.size (); ctr++ ) {
             game_stage.addActor ( platforms.get( ctr ) );
         }
+
+        game_stage.addActor ( player );
 
         camera.setToOrtho ( true );
     }
