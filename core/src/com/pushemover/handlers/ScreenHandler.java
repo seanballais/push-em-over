@@ -2,64 +2,42 @@ package com.pushemover.handlers;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
-import com.pushemover.screens.GameScreen;
-import com.pushemover.screens.IntroScreen;
-import com.pushemover.screens.MainMenu;
+import com.pushemover.enums.ScreenEnum;
+import com.pushemover.screens.AbstractScreen;
 
 public class ScreenHandler
 {
+    private static ScreenHandler instance;
     private Game game;
-    private GameScreen gameScreen;
-    private IntroScreen introScreen;
-    private MainMenu mainMenuScreen;
-    private Screen currScreen;
 
-    public ScreenHandler ( Game game )
+    private ScreenHandler ()
+    {
+        super ();
+    }
+
+    public static ScreenHandler getInstance ()
+    {
+        if ( instance == null ) {
+            instance = new ScreenHandler ();
+        }
+
+        return instance;
+    }
+
+    public void initialize ( Game game )
     {
         this.game = game;
-        gameScreen = new GameScreen ( this.game );
-        introScreen = new IntroScreen ( this.game );
-        mainMenuScreen = new MainMenu ( this.game );
     }
 
-    private void setScreen ( Screen newScreen )
+    public void showScreen ( ScreenEnum screenEnum, Game game )
     {
-        currScreen = newScreen;
+        Screen currScreen = game.getScreen ();
+
+        AbstractScreen newScreen = screenEnum.getScreen ( game );
         game.setScreen ( newScreen );
-    }
 
-    private Screen getCurrScreen ()
-    {
-        return currScreen;
-    }
-
-    public void switchToGame ()
-    {
-        setScreen ( gameScreen );
-    }
-
-    public void switchToIntro ()
-    {
-        setScreen ( introScreen );
-    }
-
-    public void switchToMain ()
-    {
-        setScreen ( mainMenuScreen );
-    }
-
-    public boolean isInGame ()
-    {
-        return getCurrScreen () == gameScreen;
-    }
-
-    public boolean isInIntro ()
-    {
-        return getCurrScreen () == introScreen;
-    }
-
-    public boolean isInMenu ()
-    {
-        return getCurrScreen () == mainMenuScreen;
+        if ( currScreen != null ) {
+            currScreen.dispose ();
+        }
     }
 }

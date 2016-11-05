@@ -29,9 +29,6 @@ public class GameScreen extends AbstractScreen
     public GameScreen ( Game game )
     {
         super ( game );
-
-        pHandler = new PlatformHandler ();
-        pHandler.setPlatforms ( 20, gameWorld );
     }
 
     @Override public void dispose ()
@@ -64,6 +61,8 @@ public class GameScreen extends AbstractScreen
         camera = new OrthographicCamera ();
         debugRenderer = new Box2DDebugRenderer ();
 
+        pHandler = new PlatformHandler ();
+        pHandler.setPlatforms ( 20, gameWorld );
         platforms = pHandler.getPlatforms ();
         player = new Player( gameWorld );
 
