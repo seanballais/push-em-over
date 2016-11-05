@@ -2,7 +2,6 @@ package com.pushemover.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Matrix4;
@@ -30,6 +29,9 @@ public class GameScreen extends AbstractScreen
     public GameScreen ( Game game )
     {
         super ( game );
+
+        pHandler = new PlatformHandler ();
+        pHandler.setPlatforms ( 20, gameWorld );
     }
 
     @Override public void dispose ()
@@ -43,7 +45,7 @@ public class GameScreen extends AbstractScreen
 
         camera.update ();
 
-        //Gdx.gl.glClearColor ( 111/255f, 169/255f, 235/255f, 1 );
+        Gdx.gl.glClearColor ( 111/255f, 169/255f, 235/255f, 1 );
         Gdx.gl.glClear ( GL20.GL_COLOR_BUFFER_BIT );
 
         Matrix4 cameraCopy = camera.combined.cpy ();
@@ -53,10 +55,6 @@ public class GameScreen extends AbstractScreen
         pHandler.updatePlatforms ();
         game_stage.act ( delta );
         game_stage.draw ();
-
-        if ( Gdx.input.isKeyPressed ( Input.Keys.ESCAPE ) ) {
-            game.setScreen ( new MainMenu ( game ) );
-        }
     }
 
     @Override public void show ()
@@ -65,8 +63,8 @@ public class GameScreen extends AbstractScreen
         gameWorld = new World ( new Vector2 ( 0, -10 ), true );
         camera = new OrthographicCamera ();
         debugRenderer = new Box2DDebugRenderer ();
-        pHandler = new PlatformHandler ();
-        platforms = pHandler.getPlatforms ( gameWorld );
+
+        platforms = pHandler.getPlatforms ();
         player = new Player( gameWorld );
 
         for ( int ctr = 0; ctr < platforms.size (); ctr++ ) {

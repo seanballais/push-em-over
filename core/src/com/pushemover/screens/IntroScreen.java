@@ -32,13 +32,6 @@ public class IntroScreen extends AbstractScreen
         batch.begin ();
         batch.draw ( texture_intro, 0, 0 );
         batch.end ();
-
-        time += delta;
-        if ( time > 1 ) {
-            if ( Gdx.input.isKeyPressed ( Input.Keys.ANY_KEY ) ) {
-                game.setScreen ( new GameScreen ( game ) );
-            }
-        }
     }
 
     @Override public void hide ()

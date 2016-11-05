@@ -20,9 +20,8 @@ public class PlatformHandler
         gprefs = new GamePreferences ();
     }
 
-    public ArrayList < Platform > getPlatforms ( World gameWorld )
+    public ArrayList < Platform > getPlatforms ()
     {
-        setPlatforms ( 20, gameWorld );
         return platforms;
     }
 
@@ -37,7 +36,7 @@ public class PlatformHandler
         }
     }
 
-    private void setPlatforms ( int numPlatforms, World gameWorld )
+    public void setPlatforms ( int numPlatforms, World gameWorld )
     {
         BodyDef platformDef = new BodyDef ();
 

@@ -1,6 +1,5 @@
 package com.pushemover.actors;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -12,7 +11,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.pushemover.preferences.GamePreferences;
 import com.pushemover.utils.Constants;
-import com.sun.org.apache.bcel.internal.classfile.ConstantNameAndType;
 
 public class Player extends Actor
 {
@@ -37,6 +35,7 @@ public class Player extends Actor
                                 getTextureHeight () * Constants.WORLD_TO_BOX );
         playerBody.createFixture ( playerBounds, 1f );
         playerBody.setLinearVelocity ( 0.0f, -125f );
+        playerBody.setUserData ( playerSprite );
     }
 
     public int getTextureHeight ()

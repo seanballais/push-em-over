@@ -17,9 +17,6 @@ public class Platform extends Actor
     private Body platformBody;
     private Sprite platformSprite;
 
-    public int x;
-    public int y;
-
     public Platform ( World world, BodyDef platformBodyDef )
     {
         platform_texture = new Texture(Gdx.files.internal("data/img/game_screen/platform.png"));
@@ -31,6 +28,7 @@ public class Platform extends Actor
                                   getTextureHeight () * Constants.WORLD_TO_BOX );
         platformBody.createFixture ( platformBounds, 1f );
         platformBody.setLinearVelocity ( 0.0f, -100f );
+        platformBody.setUserData ( platformSprite );
     }
 
     public int getTextureHeight ()
