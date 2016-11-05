@@ -2,6 +2,7 @@ package com.pushemover.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Matrix4;
@@ -11,7 +12,9 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pushemover.actors.Platform;
 import com.pushemover.actors.Player;
+import com.pushemover.enums.ScreenEnum;
 import com.pushemover.handlers.PlatformHandler;
+import com.pushemover.handlers.ScreenHandler;
 import com.pushemover.utils.Constants;
 
 import java.util.ArrayList;
@@ -38,6 +41,10 @@ public class GameScreen extends AbstractScreen
 
     @Override public void render ( float delta )
     {
+        if ( Gdx.input.isKeyPressed ( Input.Keys.SPACE ) ) {
+            ScreenHandler.getInstance().showScreen ( ScreenEnum.MAIN_MENU, game );
+        }
+
         delta = Math.min ( 0.06f, Gdx.graphics.getDeltaTime () );
 
         camera.update ();

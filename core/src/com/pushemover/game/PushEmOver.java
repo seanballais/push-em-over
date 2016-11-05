@@ -10,5 +10,5 @@ public class PushEmOver extends Game
     {
         ScreenHandler.getInstance ().initialize ( this );
         ScreenHandler.getInstance ().showScreen ( ScreenEnum.MAIN_MENU, this );
-	}
+    }
 }
