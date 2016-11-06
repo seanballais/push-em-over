@@ -24,10 +24,13 @@ public class Platform extends Actor
         this.platformSprite = new Sprite ( platform_texture );
 
         PolygonShape platformBounds = new PolygonShape ();
-        platformBounds.setAsBox ( getTextureWidth (), getTextureHeight () );
+        platformBounds.setAsBox ( Physics.toMeters ( getTextureWidth () ),
+                                  Physics.toMeters ( getTextureHeight () ) );
         platformBody.createFixture ( platformBounds, 1f );
         platformBody.setLinearVelocity ( 0.0f, -5f );
         platformBody.setUserData ( platformSprite );
+
+        platformBounds.dispose ();
     }
 
     public int getTextureHeight ()

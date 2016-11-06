@@ -46,7 +46,8 @@ public class PlatformHandler
         for ( int ctr = 0; ctr < numPlatforms; ctr++ ) {
             int randomX = new Random ().nextInt ( 10 ) * ( screenWidth / 10 );
             int randomY = new Random ().nextInt ( 5 ) * ( screenHeight / 5 );
-            platformDef.position.set ( randomX, randomY );
+            platformDef.position.set ( Physics.toMeters ( randomX ),
+                                       Physics.toMeters ( randomY ) );
             platformDef.type = BodyDef.BodyType.KinematicBody;
 
             platforms.add ( new Platform( gameWorld, platformDef ) );

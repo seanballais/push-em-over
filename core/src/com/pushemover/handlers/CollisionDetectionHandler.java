@@ -23,7 +23,7 @@ public class CollisionDetectionHandler implements ContactListener
         for ( Platform p : pHandler.getPlatforms() ) {
             if ( ( contact.getFixtureA ().getBody () == player.getBody () ) &&
                  ( contact.getFixtureB ().getBody () == p.getBody () ) ) {
-                player.getBody().setLinearVelocity ( 0.0f, -100f );
+                player.getBody().setLinearVelocity ( 0.0f, -5f );
             }
         }
     }
@@ -33,7 +33,7 @@ public class CollisionDetectionHandler implements ContactListener
         for ( Platform p : pHandler.getPlatforms() ) {
             if ( ( contact.getFixtureA ().getBody () == player.getBody () ) &&
                     ( contact.getFixtureB ().getBody () == p.getBody () ) ) {
-                player.getBody().setLinearVelocity ( 0.0f, -125f );
+                player.getBody().setLinearVelocity ( 0.0f, -100f );
             }
         }
     }
