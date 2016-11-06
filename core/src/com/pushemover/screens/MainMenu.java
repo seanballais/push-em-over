@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.pushemover.enums.ScreenEnum;
+import com.pushemover.handlers.ScreenHandler;
 
 public class MainMenu extends AbstractScreen
 {
@@ -28,6 +30,14 @@ public class MainMenu extends AbstractScreen
 
     @Override public void render ( float delta )
     {
+        if ( Gdx.input.isKeyPressed ( Input.Keys.SPACE ) ) {
+            ScreenHandler.getInstance().showScreen ( ScreenEnum.GAME, game );
+        }
+
+        if ( Gdx.input.isKeyPressed ( Input.Keys.ESCAPE ) ) {
+            Gdx.app.exit ();
+        }
+
         Gdx.gl.glClear ( GL20.GL_COLOR_BUFFER_BIT );
         batch.begin ();
         batch.draw ( title, 0, 0 );

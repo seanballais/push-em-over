@@ -55,7 +55,7 @@ public class Player extends Actor
         playerSprite.setSize ( this.getTextureWidth (), this.getTextureHeight () );
         playerSprite.draw ( batch );
     }
-
+    
     @Override public void act ( float delta )
     {
         float newXPos = playerBody.getPosition ().x;

@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.pushemover.utils.Constants;
+import com.pushemover.utils.Physics;
 
 public class Platform extends Actor
 {
@@ -24,10 +24,9 @@ public class Platform extends Actor
         this.platformSprite = new Sprite ( platform_texture );
 
         PolygonShape platformBounds = new PolygonShape ();
-        platformBounds.setAsBox ( getTextureWidth () * Constants.WORLD_TO_BOX,
-                                  getTextureHeight () * Constants.WORLD_TO_BOX );
+        platformBounds.setAsBox ( getTextureWidth (), getTextureHeight () );
         platformBody.createFixture ( platformBounds, 1f );
-        platformBody.setLinearVelocity ( 0.0f, -100f );
+        platformBody.setLinearVelocity ( 0.0f, -5f );
         platformBody.setUserData ( platformSprite );
     }
 
@@ -53,8 +52,8 @@ public class Platform extends Actor
 
     @Override public void act ( float delta )
     {
-        float newXPos = platformBody.getPosition ().x * Constants.BOX_TO_WORLD;
-        float newYPos = platformBody.getPosition ().y * Constants.BOX_TO_WORLD;
+        float newXPos = platformBody.getPosition ().x;
+        float newYPos = platformBody.getPosition ().y;
         platformSprite.setPosition ( newXPos, newYPos );
     }
 }

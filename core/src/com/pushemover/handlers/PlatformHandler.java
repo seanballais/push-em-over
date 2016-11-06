@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.pushemover.actors.Platform;
 import com.pushemover.preferences.GamePreferences;
 import com.pushemover.utils.Constants;
+import com.pushemover.utils.Physics;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -45,8 +46,7 @@ public class PlatformHandler
         for ( int ctr = 0; ctr < numPlatforms; ctr++ ) {
             int randomX = new Random ().nextInt ( 10 ) * ( screenWidth / 10 );
             int randomY = new Random ().nextInt ( 5 ) * ( screenHeight / 5 );
-            platformDef.position.set ( ( float ) randomX * Constants.WORLD_TO_BOX,
-                                       ( float ) randomY * Constants.WORLD_TO_BOX );
+            platformDef.position.set ( randomX, randomY );
             platformDef.type = BodyDef.BodyType.KinematicBody;
 
             platforms.add ( new Platform( gameWorld, platformDef ) );
