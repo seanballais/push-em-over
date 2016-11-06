@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.pushemover.preferences.GamePreferences;
-import com.pushemover.utils.Constants;
+import com.pushemover.utils.Physics;
 
 public class Player extends Actor
 {
@@ -25,16 +25,14 @@ public class Player extends Actor
 
         GamePreferences gprefs = new GamePreferences ();
         BodyDef playerBodyDef = new BodyDef ();
-        playerBodyDef.position.set ( ( float ) ( gprefs.getWidthResolution () / 2 ) * Constants.WORLD_TO_BOX,
-                                     ( float ) gprefs.getHeightResolution () * Constants.WORLD_TO_BOX );
+        playerBodyDef.position.set ( gprefs.getWidthResolution () / 2, gprefs.getHeightResolution () );
         playerBodyDef.type = BodyDef.BodyType.DynamicBody;
         this.playerBody = world.createBody ( playerBodyDef );
 
         PolygonShape playerBounds = new PolygonShape ();
-        playerBounds.setAsBox ( getTextureWidth () * Constants.WORLD_TO_BOX,
-                                getTextureHeight () * Constants.WORLD_TO_BOX );
+        playerBounds.setAsBox ( getTextureWidth (), getTextureHeight () );
         playerBody.createFixture ( playerBounds, 1f );
-        playerBody.setLinearVelocity ( 0.0f, -125f );
+        playerBody.setLinearVelocity ( 0.0f, -3f );
         playerBody.setUserData ( playerSprite );
     }
 
@@ -60,8 +58,8 @@ public class Player extends Actor
 
     @Override public void act ( float delta )
     {
-        float newXPos = playerBody.getPosition ().x * Constants.BOX_TO_WORLD;
-        float newYPos = playerBody.getPosition ().y * Constants.BOX_TO_WORLD;
+        float newXPos = playerBody.getPosition ().x;
+        float newYPos = playerBody.getPosition ().y;
         playerSprite.setPosition ( newXPos, newYPos );
     }
 }
