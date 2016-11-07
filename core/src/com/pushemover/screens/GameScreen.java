@@ -16,6 +16,8 @@ import com.pushemover.handlers.CollisionDetectionHandler;
 import com.pushemover.handlers.PlatformHandler;
 import com.pushemover.handlers.ScreenHandler;
 import com.pushemover.preferences.GamePreferences;
+import com.pushemover.utils.Constants;
+import com.pushemover.utils.Physics;
 
 import java.util.ArrayList;
 
@@ -58,7 +60,7 @@ public class GameScreen extends AbstractScreen
         double frameTime = Math.min ( newTime - currentTime, 0.25f );
 
         currentTime = newTime;
-
+        accumulator += delta;
         while ( accumulator >= step ) {
             gameWorld.step ( step, 6, 2 );
             accumulator -= step;
@@ -74,7 +76,8 @@ public class GameScreen extends AbstractScreen
         step = 1.0f / 60f;
         game_stage = new Stage ();
         gameWorld = new World ( new Vector2 ( 0, -9.8f ), true );
-        camera = new OrthographicCamera ( gprefs.getWidthResolution (), gprefs.getHeightResolution () );
+        camera = new OrthographicCamera ( Physics.toMeters ( gprefs.getWidthResolution () ),
+                                          Physics.toMeters ( gprefs.getHeightResolution () ) );
 
         pHandler = new PlatformHandler ();
         pHandler.setPlatforms ( 20, gameWorld );

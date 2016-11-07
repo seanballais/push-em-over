@@ -47,16 +47,17 @@ public class Platform extends Actor
 
         platformSprite.setRotation ( platformBody.getAngle () * 180 / ( float ) Math.PI ); // Convert radians to degrees
         platformSprite.setOrigin ( this.getTextureWidth () / 2, getTextureHeight () / 2 );
-        platformSprite.setPosition ( platformBody.getPosition ().x - ( float ) this.getTextureWidth () / 2,
-                                     platformBody.getPosition ().y - ( float ) this.getTextureHeight () / 2 );
-        platformSprite.setSize ( this.getTextureWidth (), this.getTextureHeight () );
+        platformSprite.setPosition ( Physics.toPixels ( platformBody.getPosition ().x ) - ( float ) this.getTextureWidth () / 2,
+                                     Physics.toPixels ( platformBody.getPosition ().y ) - ( float ) this.getTextureHeight () / 2 );
+        platformSprite.setSize ( Physics.toPixels ( Physics.toMeters ( this.getTextureWidth () ) ),
+                                 Physics.toPixels ( Physics.toMeters ( this.getTextureHeight () ) ) );
         platformSprite.draw ( batch );
     }
 
     @Override public void act ( float delta )
     {
-        float newXPos = platformBody.getPosition ().x;
-        float newYPos = platformBody.getPosition ().y;
+        float newXPos = Physics.toPixels ( platformBody.getPosition ().x );
+        float newYPos = Physics.toPixels ( platformBody.getPosition ().y );
         platformSprite.setPosition ( newXPos, newYPos );
     }
 }

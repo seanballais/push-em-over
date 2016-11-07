@@ -28,11 +28,13 @@ public class PlatformHandler
 
     public void updatePlatforms ()
     {
-        int originY = gprefs.getHeightResolution () + platforms.get ( 0 ).getTextureHeight ();
+        float originY = gprefs.getHeightResolution () + platforms.get ( 0 ).getTextureHeight ();
+        float originYMeters = Physics.toMeters ( originY );
         for ( Platform p : platforms ) {
             if ( ( int ) p.getBody ().getPosition ().y < -platforms.get ( 0 ).getTextureHeight () ) {
-                int randomX = new Random ().nextInt ( 10 ) * ( gprefs.getWidthResolution () / 10 );
-                p.getBody ().setTransform ( ( float ) randomX, ( float ) originY, 0f );
+                float randomX = new Random ().nextInt ( 10 ) * ( gprefs.getWidthResolution () / 10 );
+                float randomXMeters = Physics.toMeters ( randomX );
+                p.getBody ().setTransform ( randomXMeters, originYMeters, 0f );
             }
         }
     }
@@ -44,10 +46,11 @@ public class PlatformHandler
         int screenHeight = gprefs.getHeightResolution ();
         int screenWidth = gprefs.getWidthResolution ();
         for ( int ctr = 0; ctr < numPlatforms; ctr++ ) {
-            int randomX = new Random ().nextInt ( 10 ) * ( screenWidth / 10 );
-            int randomY = new Random ().nextInt ( 5 ) * ( screenHeight / 5 );
-            platformDef.position.set ( Physics.toMeters ( randomX ),
-                                       Physics.toMeters ( randomY ) );
+            float randomX = new Random ().nextInt ( 10 ) * ( screenWidth / 10 );
+            float randomY = new Random ().nextInt ( 5 ) * ( screenHeight / 5 );
+            float randomXMeters = Physics.toMeters ( randomX );
+            float randomYMeters = Physics.toMeters ( randomY );
+            platformDef.position.set ( randomXMeters, randomYMeters );
             platformDef.type = BodyDef.BodyType.KinematicBody;
 
             platforms.add ( new Platform( gameWorld, platformDef ) );
