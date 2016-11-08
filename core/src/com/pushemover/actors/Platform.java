@@ -49,8 +49,7 @@ public class Platform extends Actor
         platformSprite.setOrigin ( this.getTextureWidth () / 2, getTextureHeight () / 2 );
         platformSprite.setPosition ( Physics.toPixels ( platformBody.getPosition ().x ) - ( float ) this.getTextureWidth () / 2,
                                      Physics.toPixels ( platformBody.getPosition ().y ) - ( float ) this.getTextureHeight () / 2 );
-        platformSprite.setSize ( Physics.toPixels ( Physics.toMeters ( this.getTextureWidth () ) ),
-                                 Physics.toPixels ( Physics.toMeters ( this.getTextureHeight () ) ) );
+        platformSprite.setSize ( this.getTextureWidth (),this.getTextureHeight () );
         platformSprite.draw ( batch );
     }
 

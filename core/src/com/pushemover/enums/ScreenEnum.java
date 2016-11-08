@@ -5,6 +5,8 @@ import com.pushemover.screens.AbstractScreen;
 import com.pushemover.screens.GameScreen;
 import com.pushemover.screens.MainMenu;
 
+import java.util.concurrent.TimeUnit;
+
 public enum ScreenEnum
 {
     MAIN_MENU {
@@ -17,6 +19,12 @@ public enum ScreenEnum
     GAME {
         public AbstractScreen getScreen ( Game game )
         {
+            try {
+                TimeUnit.SECONDS.sleep ( 1 );
+            } catch ( InterruptedException ex ) {
+                ex.printStackTrace ();
+            }
+
             return new GameScreen ( game );
         }
     };

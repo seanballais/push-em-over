@@ -25,12 +25,16 @@ public class Player extends Actor
 
         GamePreferences gprefs = new GamePreferences ();
         BodyDef playerBodyDef = new BodyDef ();
-        playerBodyDef.position.set ( gprefs.getWidthResolution () / 2, gprefs.getHeightResolution () );
+        float positionXMeters = Physics.toMeters ( gprefs.getWidthResolution () / 2 );
+        float positionYMeters = Physics.toMeters ( gprefs.getHeightResolution () );
+        playerBodyDef.position.set ( positionXMeters, positionYMeters );
         playerBodyDef.type = BodyDef.BodyType.DynamicBody;
+        playerBodyDef.fixedRotation = true;
         this.playerBody = world.createBody ( playerBodyDef );
 
         PolygonShape playerBounds = new PolygonShape ();
-        playerBounds.setAsBox ( getTextureWidth (), getTextureHeight () );
+        playerBounds.setAsBox ( Physics.toMeters ( getTextureWidth () ),
+                                Physics.toMeters ( getTextureHeight () ) );
         playerBody.createFixture ( playerBounds, 1f );
         playerBody.setLinearVelocity ( 0.0f, -100f );
         playerBody.setUserData ( playerSprite );
@@ -50,16 +54,16 @@ public class Player extends Actor
 
         playerSprite.setRotation ( playerBody.getAngle () * 180 / ( float ) Math.PI ); // Convert radians to degrees
         playerSprite.setOrigin ( this.getTextureWidth () / 2, getTextureHeight () / 2 );
-        playerSprite.setPosition ( playerBody.getPosition ().x - ( float ) this.getTextureWidth () / 2,
-                                   playerBody.getPosition ().y - ( float ) this.getTextureHeight () / 2 );
+        playerSprite.setPosition ( Physics.toPixels ( playerBody.getPosition ().x ) - ( float ) this.getTextureWidth () / 2,
+                                   Physics.toPixels ( playerBody.getPosition ().y ) - ( float ) this.getTextureHeight () / 2 );
         playerSprite.setSize ( this.getTextureWidth (), this.getTextureHeight () );
         playerSprite.draw ( batch );
     }
 
     @Override public void act ( float delta )
     {
-        float newXPos = playerBody.getPosition ().x;
-        float newYPos = playerBody.getPosition ().y;
+        float newXPos = Physics.toPixels ( playerBody.getPosition ().x );
+        float newYPos = Physics.toPixels ( playerBody.getPosition ().y );
         playerSprite.setPosition ( newXPos, newYPos );
     }
 }

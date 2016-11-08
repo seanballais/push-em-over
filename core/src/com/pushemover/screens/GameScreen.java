@@ -16,7 +16,6 @@ import com.pushemover.handlers.CollisionDetectionHandler;
 import com.pushemover.handlers.PlatformHandler;
 import com.pushemover.handlers.ScreenHandler;
 import com.pushemover.preferences.GamePreferences;
-import com.pushemover.utils.Constants;
 import com.pushemover.utils.Physics;
 
 import java.util.ArrayList;
@@ -36,6 +35,13 @@ public class GameScreen extends AbstractScreen
     public GameScreen ( Game game )
     {
         super ( game );
+
+        step = 1.0f / 60f;
+
+        gameWorld = new World ( new Vector2 ( 0, -9.8f ), true );
+        pHandler = new PlatformHandler ();
+        player = new Player( gameWorld );
+        gameWorld.setContactListener ( new CollisionDetectionHandler( player, pHandler ) );
     }
 
     @Override public void dispose ()
@@ -73,18 +79,12 @@ public class GameScreen extends AbstractScreen
     @Override public void show ()
     {
         GamePreferences gprefs = new GamePreferences ();
-        step = 1.0f / 60f;
         game_stage = new Stage ();
-        gameWorld = new World ( new Vector2 ( 0, -9.8f ), true );
         camera = new OrthographicCamera ( Physics.toMeters ( gprefs.getWidthResolution () ),
                                           Physics.toMeters ( gprefs.getHeightResolution () ) );
 
-        pHandler = new PlatformHandler ();
         pHandler.setPlatforms ( 20, gameWorld );
         platforms = pHandler.getPlatforms ();
-        player = new Player( gameWorld );
-        gameWorld.setContactListener ( new CollisionDetectionHandler( player, pHandler ) );
-
         for ( int ctr = 0; ctr < platforms.size (); ctr++ ) {
             game_stage.addActor ( platforms.get( ctr ) );
         }

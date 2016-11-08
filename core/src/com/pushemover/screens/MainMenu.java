@@ -34,7 +34,7 @@ public class MainMenu extends AbstractScreen
             ScreenHandler.getInstance().showScreen ( ScreenEnum.GAME, game );
         }
 
-        if ( Gdx.input.isKeyPressed ( Input.Keys.ESCAPE ) ) {
+        if ( Gdx.input.isKeyPressed ( Input.Keys.E ) ) {
             Gdx.app.exit ();
         }
 

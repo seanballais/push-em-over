@@ -30,8 +30,10 @@ public class PlatformHandler
     {
         float originY = gprefs.getHeightResolution () + platforms.get ( 0 ).getTextureHeight ();
         float originYMeters = Physics.toMeters ( originY );
+        int bodyHeight = -platforms.get ( 0 ).getTextureHeight () ;
         for ( Platform p : platforms ) {
-            if ( ( int ) p.getBody ().getPosition ().y < -platforms.get ( 0 ).getTextureHeight () ) {
+            int bodyPos = ( int ) Physics.toPixels ( p.getBody ().getPosition ().y );
+            if ( bodyPos < bodyHeight ) {
                 float randomX = new Random ().nextInt ( 10 ) * ( gprefs.getWidthResolution () / 10 );
                 float randomXMeters = Physics.toMeters ( randomX );
                 p.getBody ().setTransform ( randomXMeters, originYMeters, 0f );
