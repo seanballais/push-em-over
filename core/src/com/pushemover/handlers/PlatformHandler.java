@@ -28,34 +28,28 @@ public class PlatformHandler
 
     public void updatePlatforms ()
     {
-        float originY = gprefs.getHeightResolution () + platforms.get ( 0 ).getTextureHeight ();
-        float originYMeters = Physics.toMeters ( originY );
-        int bodyHeight = -platforms.get ( 0 ).getTextureHeight () ;
+        int screenSpawnPointY = gprefs.getHeightResolution () + platforms.get ( 0 ).getTextureHeight ();
+        int screenBottomLimit = -platforms.get ( 0 ).getTextureHeight () ;
+        int randomXPos;
         for ( Platform p : platforms ) {
-            int bodyPos = ( int ) Physics.toPixels ( p.getBody ().getPosition ().y );
-            if ( bodyPos < bodyHeight ) {
-                float randomX = new Random ().nextInt ( 10 ) * ( gprefs.getWidthResolution () / 10 );
-                float randomXMeters = Physics.toMeters ( randomX );
-                p.getBody ().setTransform ( randomXMeters, originYMeters, 0f );
+            if ( p.getYPos () < screenBottomLimit ) {
+                randomXPos = new Random ().nextInt ( 10 ) * ( gprefs.getWidthResolution () / 10 );
+                p.setPos ( randomXPos, screenSpawnPointY );
             }
         }
     }
 
     public void setPlatforms ( int numPlatforms, World gameWorld )
     {
-        BodyDef platformDef = new BodyDef ();
-
         int screenHeight = gprefs.getHeightResolution ();
         int screenWidth = gprefs.getWidthResolution ();
+        int randomXPos;
+        int randomYPos;
         for ( int ctr = 0; ctr < numPlatforms; ctr++ ) {
-            float randomX = new Random ().nextInt ( 10 ) * ( screenWidth / 10 );
-            float randomY = new Random ().nextInt ( 5 ) * ( screenHeight / 5 );
-            float randomXMeters = Physics.toMeters ( randomX );
-            float randomYMeters = Physics.toMeters ( randomY );
-            platformDef.position.set ( randomXMeters, randomYMeters );
-            platformDef.type = BodyDef.BodyType.KinematicBody;
+            randomXPos = new Random ().nextInt ( 10 ) * ( screenWidth / 10 );
+            randomYPos = new Random ().nextInt ( 5 ) * ( screenHeight / 5 );
 
-            platforms.add ( new Platform( gameWorld, platformDef ) );
+            platforms.add ( new Platform( randomXPos, randomYPos ) );
         }
     }
 }

@@ -3,13 +3,7 @@ package com.pushemover.actors;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.pushemover.utils.Physics;
 
 public class Platform extends Actor
 {
@@ -24,12 +18,6 @@ public class Platform extends Actor
         this.y = y;
     }
 
-    public int getTextureHeight ()
-    {
-        return platform_texture.getHeight ();
-    }
-    public int getTextureWidth () { return platform_texture.getWidth (); }
-
     @Override public void draw ( Batch batch, float alpha )
     {
         batch.draw ( platform_texture, x, y );
@@ -38,5 +26,17 @@ public class Platform extends Actor
     @Override public void act ( float delta )
     {
         y -= 2;
+    }
+
+    public int getTextureHeight ()
+    {
+        return platform_texture.getHeight ();
+    }
+    public int getXPos () { return x; }
+    public int getYPos () { return y; }
+    public void setPos ( int x, int y )
+    {
+        this.x = x;
+        this.y = y;
     }
 }
