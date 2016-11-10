@@ -4,10 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.pushemover.preferences.GamePreferences;
 import com.pushemover.utils.Physics;
@@ -17,6 +14,7 @@ public class Player extends Actor
     private static Texture playerTexture;
     private Body playerBody;
     private Sprite playerSprite;
+    private boolean onGround;
 
     public Player ( World world )
     {
@@ -31,12 +29,16 @@ public class Player extends Actor
         playerBodyDef.type = BodyDef.BodyType.DynamicBody;
         playerBodyDef.fixedRotation = true;
         this.playerBody = world.createBody ( playerBodyDef );
+        onGround = false;
 
         PolygonShape playerBounds = new PolygonShape ();
         playerBounds.setAsBox ( Physics.toMeters ( getTextureWidth () ),
                                 Physics.toMeters ( getTextureHeight () ) );
-        playerBody.createFixture ( playerBounds, 1f );
-        playerBody.setLinearVelocity ( 0.0f, -100f );
+        FixtureDef playerFixtureDef = new FixtureDef ();
+        playerFixtureDef.density = 1;
+        playerFixtureDef.shape = playerBounds;
+        playerBody.createFixture ( playerFixtureDef );
+        playerBody.setLinearVelocity ( 0.0f, -1f );
         playerBody.setUserData ( playerSprite );
     }
 
@@ -65,5 +67,16 @@ public class Player extends Actor
         float newXPos = Physics.toPixels ( playerBody.getPosition ().x );
         float newYPos = Physics.toPixels ( playerBody.getPosition ().y );
         playerSprite.setPosition ( newXPos, newYPos );
+    }
+
+    public boolean isOnGround ()
+    {
+        System.out.println ( "isOnGround = " + onGround );
+        return onGround;
+    }
+
+    public void setOnGround ( boolean state )
+    {
+        onGround = state;
     }
 }

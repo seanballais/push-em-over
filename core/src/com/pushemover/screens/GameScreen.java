@@ -12,7 +12,6 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.pushemover.actors.Platform;
 import com.pushemover.actors.Player;
 import com.pushemover.enums.ScreenEnum;
-import com.pushemover.handlers.CollisionDetectionHandler;
 import com.pushemover.handlers.PlatformHandler;
 import com.pushemover.handlers.ScreenHandler;
 import com.pushemover.preferences.GamePreferences;
@@ -53,6 +52,18 @@ public class GameScreen extends AbstractScreen
     {
         if ( Gdx.input.isKeyPressed ( Input.Keys.ESCAPE ) ) {
             ScreenHandler.getInstance().showScreen ( ScreenEnum.MAIN_MENU, game );
+        }
+
+        if ( Gdx.input.isKeyPressed ( Input.Keys.W ) && player.isOnGround () ) { // TODO: Improve this part.
+            player.getBody ().applyLinearImpulse ( new Vector2 ( 0, 161f ), player.getBody ().getPosition (), true );
+        }
+
+        if ( Gdx.input.isKeyPressed ( Input.Keys.A ) ) {
+            player.getBody ().applyLinearImpulse ( new Vector2 ( -9.8f, 0 ), player.getBody ().getPosition (), true );
+        }
+
+        if ( Gdx.input.isKeyPressed ( Input.Keys.D ) ) {
+            player.getBody ().applyLinearImpulse ( new Vector2 ( 9.8f, 0 ), player.getBody ().getPosition (), true );
         }
 
         delta = Math.min ( 0.06f, Gdx.graphics.getDeltaTime () );
