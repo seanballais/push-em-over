@@ -1,19 +1,14 @@
 package com.pushemover.physics;
 
-import com.pushemover.actors.Platform;
-import com.pushemover.actors.Player;
-
 import java.awt.Rectangle;
 
 public class Collision
 {
-    public static boolean onContact ( Player player, Platform platform )
+    public static boolean onContact ( Rectangle boundingBox1, Rectangle boundingBox2 )
     {
-        Rectangle playerBoundingBox = player.getBoundingBox ();
-        Rectangle platformBoundingBox = platform.getBoundingBox ();
-        return playerBoundingBox.x < platformBoundingBox.x + platformBoundingBox.width &&
-               playerBoundingBox.x + playerBoundingBox.width > platformBoundingBox.x &&
-               playerBoundingBox.y < platformBoundingBox.y + platformBoundingBox.height &&
-               playerBoundingBox.y + playerBoundingBox.height > platformBoundingBox.y;
+        return boundingBox1.x < boundingBox2.x + boundingBox2.width &&
+               boundingBox1.x + boundingBox1.width > boundingBox2.x &&
+               boundingBox1.y < boundingBox2.y + boundingBox2.height &&
+               boundingBox1.y + boundingBox1.height > boundingBox2.y;
     }
 }

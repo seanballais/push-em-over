@@ -13,11 +13,13 @@ public class Platform extends Actor
     private Rectangle boundingBox;
     private int x;
     private int y;
+    private int deltaY;
 
     public Platform ( int x, int y )
     {
         platformTexture = new Texture ( Gdx.files.internal ( "data/img/game_screen/platform.png" ) );
         boundingBox = new Rectangle ( x, y, platformTexture.getWidth (), platformTexture.getHeight () );
+        deltaY = 2;
         this.x = x;
         this.y = y;
     }
@@ -29,7 +31,7 @@ public class Platform extends Actor
 
     @Override public void act ( float delta )
     {
-        y -= 2;
+        y -= deltaY;
         boundingBox.x = x;
         boundingBox.y = y;
     }
@@ -38,8 +40,10 @@ public class Platform extends Actor
     {
         return platformTexture.getHeight ();
     }
+    public int getTextureWidth () { return platformTexture.getWidth (); }
     public int getXPos () { return x; }
     public int getYPos () { return y; }
+    public int getDeltaY () { return deltaY; }
     public Rectangle getBoundingBox () { return boundingBox; }
     public void setPos ( int x, int y )
     {

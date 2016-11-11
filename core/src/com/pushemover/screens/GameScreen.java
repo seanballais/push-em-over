@@ -9,11 +9,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pushemover.actors.Platform;
 import com.pushemover.actors.Player;
 import com.pushemover.enums.ScreenEnum;
+import com.pushemover.handlers.CollisionHandler;
 import com.pushemover.handlers.PlatformHandler;
 import com.pushemover.handlers.ScreenHandler;
 import com.pushemover.preferences.GamePreferences;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GameScreen extends AbstractScreen
 {
@@ -21,7 +23,9 @@ public class GameScreen extends AbstractScreen
     private Stage game_stage;
     private PlatformHandler pHandler;
     private Player player;
+    private ArrayList < Platform > platforms;
     private GamePreferences gprefs;
+    private CollisionHandler collisionHandler;
     private double accumulator;
     private float step;
 
@@ -33,7 +37,13 @@ public class GameScreen extends AbstractScreen
 
         gprefs = new GamePreferences ();
         pHandler = new PlatformHandler ();
-        player = new Player( gprefs.getWidthResolution () / 2, gprefs.getHeightResolution () );
+        int numPlatforms = 20;
+        pHandler.setPlatforms ( numPlatforms );
+        platforms = pHandler.getPlatforms ();
+
+        Platform initPlayerPlatformSpawn = platforms.get ( new Random ().nextInt ( numPlatforms - 1 ) );
+        player = new Player( initPlayerPlatformSpawn.getXPos () + initPlayerPlatformSpawn.getTextureWidth () / 2,
+                initPlayerPlatformSpawn.getYPos () + initPlayerPlatformSpawn.getTextureHeight () );
     }
 
     @Override public void dispose ()
@@ -59,6 +69,9 @@ public class GameScreen extends AbstractScreen
 
         delta = Math.min ( 0.06f, Gdx.graphics.getDeltaTime () );
 
+        // Update physics
+        collisionHandler.handleCollisions ();
+
         camera.update ();
 
         Gdx.gl.glClearColor ( 111/255f, 169/255f, 235/255f, 1 );
@@ -83,8 +96,7 @@ public class GameScreen extends AbstractScreen
         game_stage = new Stage ();
         camera = new OrthographicCamera ();
 
-        pHandler.setPlatforms ( 20 );
-        ArrayList < Platform > platforms = pHandler.getPlatforms ();
+        collisionHandler = new CollisionHandler ( player, platforms );
         for ( Platform p : platforms ) {
             game_stage.addActor ( p );
         }
