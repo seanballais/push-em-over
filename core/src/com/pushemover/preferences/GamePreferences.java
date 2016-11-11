@@ -3,7 +3,6 @@ package com.pushemover.preferences;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
-import com.pushemover.exceptions.PlayerNotFoundException;
 
 public class GamePreferences
 {
@@ -74,7 +73,7 @@ public class GamePreferences
         prefs.putBoolean ( "res_full", fullscreen );
     }
 
-    public String getName ( int player_num ) throws PlayerNotFoundException
+    public String getName ( int player_num )
     {
         if ( player_num == 0 ) { // Player 1 Name
             return prefs.getString ( "p1_name", "Player 1" );
@@ -82,10 +81,10 @@ public class GamePreferences
             return prefs.getString ( "p2_name", "Player 2" );
         }
 
-        throw new PlayerNotFoundException ( "Player numbers exceeds that of the available number of players (2)." );
+        return "";
     }
 
-    public int getJumpKey ( int player_num ) throws PlayerNotFoundException
+    public int getJumpKey ( int player_num )
     {
         if ( player_num == 0 ) { // Player 1 Jump Key
             return prefs.getInteger ( "p1_jump", Input.Keys.W );
@@ -93,10 +92,10 @@ public class GamePreferences
             return prefs.getInteger ( "p2_jump", Input.Keys.UP );
         }
 
-        throw new PlayerNotFoundException ( "Player numbers exceeds that of the available number of players (2)." );
+        return -1;
     }
 
-    public int getLeftKey ( int player_num ) throws PlayerNotFoundException
+    public int getLeftKey ( int player_num )
     {
         if ( player_num == 0 ) { // Player 1 Left Key
             return prefs.getInteger ( "p1_left", Input.Keys.A );
@@ -104,10 +103,10 @@ public class GamePreferences
             return prefs.getInteger ( "p1_left", Input.Keys.LEFT );
         }
 
-        throw new PlayerNotFoundException ( "Player numbers exceeds that of the available number of players (2)." );
+        return -1;
     }
 
-    public int getRightKey ( int player_num ) throws PlayerNotFoundException
+    public int getRightKey ( int player_num )
     {
         if ( player_num == 0 ) { // Player 1 Right Key
             return prefs.getInteger ( "p1_right", Input.Keys.D );
@@ -115,10 +114,10 @@ public class GamePreferences
             return prefs.getInteger ( "p1_right", Input.Keys.RIGHT );
         }
 
-        throw new PlayerNotFoundException ( "Player numbers exceeds that of the available number of players (2)." );
+        return -1;
     }
 
-    public int getPunchKey ( int player_num ) throws PlayerNotFoundException
+    public int getPunchKey ( int player_num )
     {
         if ( player_num == 0 ) { // Player 1 Punch Key
             return prefs.getInteger ( "p1_punch", Input.Keys.F );
@@ -126,7 +125,7 @@ public class GamePreferences
             return prefs.getInteger ( "p1_punch", Input.Keys.SHIFT_RIGHT );
         }
 
-        throw new PlayerNotFoundException ( "Player numbers exceeds that of the available number of players (2)." );
+        return -1;
     }
 
     public int getWidthResolution ()

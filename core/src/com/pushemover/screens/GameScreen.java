@@ -21,6 +21,7 @@ public class GameScreen extends AbstractScreen
     private Stage game_stage;
     private PlatformHandler pHandler;
     private Player player;
+    private GamePreferences gprefs;
     private double accumulator;
     private float step;
 
@@ -30,7 +31,7 @@ public class GameScreen extends AbstractScreen
 
         step = 1.0f / 60f;
 
-        GamePreferences gprefs = new GamePreferences ();
+        gprefs = new GamePreferences ();
         pHandler = new PlatformHandler ();
         player = new Player( gprefs.getWidthResolution () / 2, gprefs.getHeightResolution () );
     }
@@ -44,6 +45,16 @@ public class GameScreen extends AbstractScreen
     {
         if ( Gdx.input.isKeyPressed ( Input.Keys.ESCAPE ) ) {
             ScreenHandler.getInstance().showScreen ( ScreenEnum.MAIN_MENU, game );
+        }
+
+        // Player presses
+        // Player 0 refers to player 1.
+        if ( Gdx.input.isKeyPressed ( gprefs.getRightKey ( 0 ) ) ) {
+            player.moveXPos ( 7 );
+        }
+
+        if ( Gdx.input.isKeyPressed ( gprefs.getLeftKey ( 0 ) ) ) {
+            player.moveXPos ( -7 );
         }
 
         delta = Math.min ( 0.06f, Gdx.graphics.getDeltaTime () );
