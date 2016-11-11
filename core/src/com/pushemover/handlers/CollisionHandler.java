@@ -26,6 +26,13 @@ public class CollisionHandler
             platformBoundingBox = p.getBoundingBox ();
             if ( Collision.onContact ( playerBoundingBox, platformBoundingBox ) ) {
                 player.setDeltaY ( p.getDeltaY () );
+                player.setContactBuddy ( platformBoundingBox );
+            }
+
+            if ( !Collision.onContact ( playerBoundingBox, platformBoundingBox ) &&
+                 player.getContactBuddy() == platformBoundingBox ) {
+                player.setDeltaY ( 7 );
+                player.setContactBuddy ( null );
             }
         }
     }

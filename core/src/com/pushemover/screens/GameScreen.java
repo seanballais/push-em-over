@@ -41,9 +41,15 @@ public class GameScreen extends AbstractScreen
         pHandler.setPlatforms ( numPlatforms );
         platforms = pHandler.getPlatforms ();
 
+        int y = 0;
         Platform initPlayerPlatformSpawn = platforms.get ( new Random ().nextInt ( numPlatforms - 1 ) );
+        while ( y < gprefs.getHeightResolution () / 2 ) {
+            initPlayerPlatformSpawn = platforms.get ( new Random ().nextInt ( numPlatforms - 1 ) );
+            y = initPlayerPlatformSpawn.getYPos ();
+        }
+
         player = new Player( initPlayerPlatformSpawn.getXPos () + initPlayerPlatformSpawn.getTextureWidth () / 2,
-                initPlayerPlatformSpawn.getYPos () + initPlayerPlatformSpawn.getTextureHeight () );
+                             initPlayerPlatformSpawn.getYPos () + initPlayerPlatformSpawn.getTextureHeight () * 2 );
     }
 
     @Override public void dispose ()
