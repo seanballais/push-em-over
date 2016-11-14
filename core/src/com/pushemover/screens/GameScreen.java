@@ -94,6 +94,8 @@ public class GameScreen extends AbstractScreen
             pHandler.updatePlatforms ();
             game_stage.act ( delta );
             game_stage.draw ();
+
+            player.moveXPos ( 0 );
         }
     }
 

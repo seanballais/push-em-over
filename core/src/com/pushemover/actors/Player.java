@@ -14,12 +14,14 @@ public class Player extends Actor
     private Rectangle contactBuddy;
     private int x;
     private int y;
+    private int deltaX;
     private int deltaY;
 
     public Player ( int x, int y )
     {
         playerTexture = new Texture(Gdx.files.internal("data/img/game_screen/player.png"));
         boundingBox = new Rectangle ( x, y, playerTexture.getWidth (), playerTexture.getHeight () );
+        deltaX = 0;
         deltaY = 7;
         contactBuddy = null;
         this.x = x;
@@ -32,6 +34,7 @@ public class Player extends Actor
     }
     @Override public void act ( float delta )
     {
+        x += deltaX;
         y -= deltaY;
         boundingBox.x = x;
         boundingBox.y = y;
@@ -39,7 +42,12 @@ public class Player extends Actor
 
     public void moveXPos ( int x )
     {
-        this.x += x;
+        this.deltaX = x;
+    }
+
+    public void moveYPos ( int y )
+    {
+        this.deltaY = y;
     }
     public Rectangle getBoundingBox () { return boundingBox; }
     public void setDeltaY ( int deltaY) { this.deltaY = deltaY; }
