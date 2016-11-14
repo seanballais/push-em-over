@@ -35,5 +35,7 @@ public class CollisionHandler
                 player.setContactBuddy ( null );
             }
         }
+
+        // TODO: Detect collision on each bounding box side.
     }
 }
