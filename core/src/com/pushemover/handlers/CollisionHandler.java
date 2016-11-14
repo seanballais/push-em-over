@@ -2,6 +2,7 @@ package com.pushemover.handlers;
 
 import com.pushemover.actors.Platform;
 import com.pushemover.actors.Player;
+import com.pushemover.enums.CollisionSideEnum;
 import com.pushemover.physics.Collision;
 
 import java.awt.Rectangle;
@@ -24,18 +25,17 @@ public class CollisionHandler
         Rectangle platformBoundingBox;
         for ( Platform p : platforms ) {
             platformBoundingBox = p.getBoundingBox ();
-            if ( Collision.onContact ( playerBoundingBox, platformBoundingBox ) ) {
-                player.setDeltaY ( p.getDeltaY () );
+
+            if ( Collision.collision ( playerBoundingBox, platformBoundingBox ) == CollisionSideEnum.TOP ) {
+                player.moveYPos ( p.getDeltaY () );
                 player.setContactBuddy ( platformBoundingBox );
             }
 
-            if ( !Collision.onContact ( playerBoundingBox, platformBoundingBox ) &&
-                 player.getContactBuddy() == platformBoundingBox ) {
-                player.setDeltaY ( 7 );
+            if ( Collision.collision ( playerBoundingBox, platformBoundingBox ) == CollisionSideEnum.NONE &&
+                    player.getContactBuddy() == platformBoundingBox) {
+                player.moveYPos ( 7 );
                 player.setContactBuddy ( null );
             }
         }
-
-        // TODO: Detect collision on each bounding box side.
     }
 }

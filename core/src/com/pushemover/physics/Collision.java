@@ -31,22 +31,22 @@ public class Collision
         float distanceX = ( boundingBoxSource.width / 2 ) - ( boundingBoxTarget.width / 2 );
         float distanceY = ( boundingBoxSource.height / 2 ) - ( boundingBoxTarget.height / 2 );
 
-        if ( Math.abs ( distanceX ) <= width && Math.abs ( distanceY ) <= height ) {
+        if ( onContact ( boundingBoxSource, boundingBoxTarget ) ) {
             // BA-BANG! COLLISION, MI AMIGO!
             float widthY = width * distanceY;
             float heightX = height * distanceX;
 
             if ( widthY > heightX ) {
                 if ( widthY > -heightX ) {
-                    return CollisionSideEnum.BOTTOM;
-                } else {
                     return CollisionSideEnum.LEFT;
+                } else {
+                    return CollisionSideEnum.TOP;
                 }
             } else {
                 if ( widthY > -heightX ) {
                     return CollisionSideEnum.RIGHT;
                 } else {
-                    return CollisionSideEnum.TOP;
+                    return CollisionSideEnum.BOTTOM;
                 }
             }
         }
