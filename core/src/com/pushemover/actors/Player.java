@@ -11,9 +11,10 @@ public class Player extends Actor
 {
     private Texture playerTexture;
     private Rectangle boundingBox;
-    private Rectangle contactBuddy;
     private int x;
     private int y;
+    private int prevX;
+    private int prevY;
     private int deltaX;
     private int deltaY;
 
@@ -23,7 +24,6 @@ public class Player extends Actor
         boundingBox = new Rectangle ( x, y, playerTexture.getWidth (), playerTexture.getHeight () );
         deltaX = 0;
         deltaY = 7;
-        contactBuddy = null;
         this.x = x;
         this.y = y;
     }
@@ -34,6 +34,8 @@ public class Player extends Actor
     }
     @Override public void act ( float delta )
     {
+        prevX = x;
+        prevY = y;
         x += deltaX;
         y -= deltaY;
         boundingBox.x = x;
@@ -44,13 +46,11 @@ public class Player extends Actor
     {
         this.deltaX = x;
     }
-
-    public void moveYPos ( int y )
-    {
-        this.deltaY = y;
-    }
+    public void adjustXPos ( int x ) { this.x = x; }
+    public void adjustYPos ( int y ) { this.y = y; }
     public Rectangle getBoundingBox () { return boundingBox; }
-    public void setDeltaY ( int deltaY) { this.deltaY = deltaY; }
-    public void setContactBuddy ( Rectangle contactBuddy ) { this.contactBuddy = contactBuddy; }
-    public Rectangle getContactBuddy () { return contactBuddy; }
+    public int getPrevX () { return prevX; }
+    public int getPrevY () { return prevY; }
+    public int getPlayerX() { return x; }
+    public int getPlayerY() { return y; }
 }
