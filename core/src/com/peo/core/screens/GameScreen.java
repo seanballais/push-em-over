@@ -13,7 +13,7 @@ public class GameScreen extends AbstractScreen
         super ( game );
 
         gameWorld = new GameScreenWorld ();
-        gameRenderer = new GameScreenRenderer ();
+        gameRenderer = new GameScreenRenderer ( gameWorld, gameWorld.getPlayStage () );
     }
 
     @Override public void render ( float delta )
@@ -50,5 +50,6 @@ public class GameScreen extends AbstractScreen
     @Override public void dispose ()
     {
         Gdx.app.log ( "GameScreen", "dispose () called" );
+        gameRenderer.dispose ();
     }
 }
