@@ -1,6 +1,8 @@
 package com.peo.core.actors;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -9,7 +11,9 @@ import java.util.HashMap;
 
 public class GenericPlayer extends Actor
 {
-    private Texture playerSpritesheet;
+    private static Texture playerSpritesheet;
+    private String playerName;
+    private Color playerTextColor;
     private int x;
     private int y;
     private int width;
@@ -17,17 +21,21 @@ public class GenericPlayer extends Actor
     private float elapsedTime;
     private PlayerStateEnum playerState;
     private HashMap < String, Object > animations;
+    private Color bodyColor;
 
-    public GenericPlayer ( int x, int y )
+    public GenericPlayer ( String playerName, Color playerTextColor, int x, int y )
     {
         this.x = x;
         this.y = y;
+        this.playerName = playerName;
+        this.playerTextColor = playerTextColor;
         width = 125;
         height = 150;
         elapsedTime = 0;
-        playerState = PlayerStateEnum.FALLING;
+        playerState = PlayerStateEnum.WALKING;
         playerSpritesheet = new Texture ( Gdx.files.internal ( "img/actors/player-spritesheet.jpg" ) );
         animations = new HashMap < String, Object > ();
+        bodyColor = new Color ( 255f, 255f, 79f, 1f );
 
         setAnimations ();
     }
@@ -45,9 +53,9 @@ public class GenericPlayer extends Actor
         if ( playerState == PlayerStateEnum.SAD ) {
             currFrame = ( TextureRegion ) animations.get ( "hit" );
         } else if ( playerState == PlayerStateEnum.PUNCHING ) {
-            currFrame = ( ( Animation ) animations.get ( "punching" ) ).getKeyFrame ( elapsedTime, false );
+            currFrame = ( ( Animation ) animations.get ( "punching" ) ).getKeyFrame ( elapsedTime, true );
         } else if ( playerState == PlayerStateEnum.FALLING ) {
-            currFrame = ( ( Animation ) animations.get ( "falling" ) ).getKeyFrame ( elapsedTime, false );
+            currFrame = ( ( Animation ) animations.get ( "falling" ) ).getKeyFrame ( elapsedTime, true );
         }
 
         batch.draw ( currFrame, x, y );
