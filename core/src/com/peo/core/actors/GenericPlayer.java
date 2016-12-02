@@ -14,6 +14,7 @@ public class GenericPlayer extends Actor
     private static Texture playerSpritesheet;
     private String playerName;
     private Color playerTextColor;
+    private BitmapFont playerTextFont;
     private int x;
     private int y;
     private int width;
@@ -29,6 +30,9 @@ public class GenericPlayer extends Actor
         this.y = y;
         this.playerName = playerName;
         this.playerTextColor = playerTextColor;
+        playerTextFont = new BitmapFont ();
+        playerTextFont.setColor ( this.playerTextColor );
+        playerTextFont.getData ().setScale ( 2f );
         width = 125;
         height = 150;
         elapsedTime = 0;
@@ -59,6 +63,7 @@ public class GenericPlayer extends Actor
         }
 
         batch.draw ( currFrame, x, y );
+        playerTextFont.draw ( batch, playerName, ( ( x + ( x + width ) ) / 2 ) - 25, y + height + 30 );
     }
 
     @Override public void act ( float delta )
