@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import java.util.HashMap;
@@ -22,32 +23,39 @@ public class GenericPlayer extends Actor
     private float elapsedTime;
     private PlayerStateEnum playerState;
     private HashMap < String, Object > animations;
-    private Color bodyColor;
+    private World physicsWorldRef;
+    private Body playerPhysicsBody;
 
-    public GenericPlayer ( String playerName, Color playerTextColor, int x, int y )
+    public GenericPlayer ( World physicsWorldRef, String playerName, Color playerTextColor, int x, int y )
     {
         this.x = x;
         this.y = y;
         this.playerName = playerName;
         this.playerTextColor = playerTextColor;
+        this.physicsWorldRef = physicsWorldRef;
         playerTextFont = new BitmapFont ();
         playerTextFont.setColor ( this.playerTextColor );
-        playerTextFont.getData ().setScale ( 2f );
-        width = 125;
-        height = 150;
+        playerTextFont.getData ().setScale ( 1.5f );
+        width = 50;
+        height = 60;
         elapsedTime = 0;
         playerState = PlayerStateEnum.WALKING;
         playerSpritesheet = new Texture ( Gdx.files.internal ( "img/actors/player-spritesheet.jpg" ) );
         animations = new HashMap < String, Object > ();
-        bodyColor = new Color ( 255f, 255f, 79f, 1f );
 
         setAnimations ();
+
+        playerPhysicsBody = createBody ();
     }
 
     public void setPlayerState ( PlayerStateEnum playerState )
     {
         this.playerState = playerState;
     }
+    public void setXPos ( int x ) { this.x = x; }
+    public void setYPos ( int y ) { this.y = y; }
+    public int getXPos () { return this.x; }
+    public int getYPos () { return this.y; }
 
     @Override public void draw ( Batch batch, float parentAlpha )
     {
@@ -71,6 +79,33 @@ public class GenericPlayer extends Actor
         elapsedTime += Gdx.graphics.getDeltaTime ();
     }
 
+    public Body getPlayerPhysicsBody ()
+    {
+        return playerPhysicsBody;
+    }
+
+    private Body createBody ()
+    {
+        BodyDef playerBodyDef = new BodyDef ();
+        playerBodyDef.type = BodyDef.BodyType.DynamicBody;
+        playerBodyDef.position.set ( x, y );
+
+        Body playerBody = physicsWorldRef.createBody ( playerBodyDef );
+
+        PolygonShape playerBounds = new PolygonShape ();
+        playerBounds.setAsBox ( width / 2, height / 2 );
+
+        FixtureDef playerFixtureDef = new FixtureDef ();
+        playerFixtureDef.shape = playerBounds;
+        playerFixtureDef.density = 1f;
+
+        Fixture playerFixture = playerBody.createFixture ( playerFixtureDef );
+
+        playerBounds.dispose ();
+
+        return playerBody;
+    }
+
     private void setAnimations ()
     {
         Animation playerPunchingAnimation;
@@ -82,7 +117,7 @@ public class GenericPlayer extends Actor
         TextureRegion [] punchingFrames = new TextureRegion [ 3 ];
         for ( int frameCounter = 0; frameCounter < punchingFrames.length; frameCounter++ ) {
             punchingFrames [ frameCounter ] = new TextureRegion (
-                    playerSpritesheet, frameCounter * 125, 0, width, height
+                    playerSpritesheet, frameCounter * width, 0, width, height
             );
         }
 
@@ -93,7 +128,7 @@ public class GenericPlayer extends Actor
         TextureRegion [] fallingFrames = new TextureRegion [ 2 ];
         for ( int frameCounter = 0; frameCounter < fallingFrames.length; frameCounter++ ) {
             fallingFrames [ frameCounter ] = new TextureRegion (
-                    playerSpritesheet, frameCounter * 125, 150, width, height
+                    playerSpritesheet, frameCounter * width, 60, width, height
             );
         }
 
@@ -101,8 +136,8 @@ public class GenericPlayer extends Actor
         animations.put ( "falling", playerFallingAnimation );
 
         // Emotions texture regions
-        playerWalking = new TextureRegion ( playerSpritesheet, 0, 300, width, height );
-        playerSad = new TextureRegion ( playerSpritesheet, 125, 300, width, height );
+        playerWalking = new TextureRegion ( playerSpritesheet, 0, 120, width, height );
+        playerSad = new TextureRegion ( playerSpritesheet, 50, 120, width, height );
         animations.put ( "walking", playerWalking );
         animations.put ( "hit", playerSad );
     }
