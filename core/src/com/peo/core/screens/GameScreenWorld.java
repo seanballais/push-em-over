@@ -60,4 +60,5 @@ public class GameScreenWorld
     {
         return playStage;
     }
+    public World getPhysicsWorld () { return physicsWorld; }
 }

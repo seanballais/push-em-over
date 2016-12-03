@@ -37,10 +37,10 @@ public class PlatformManager
         for ( int ctr = 0; ctr < numPlatforms; ctr++ ) {
             randomXPos = new Random ().nextInt ( 10 ) * ( screenWidth / 10 );
             randomYPos = new Random ().nextInt ( 5 ) * ( screenHeight / 5 );
-            if ( randomYPos > highestPoints [ 1 ].y - 40 ) {
-                // Plus 40 to compensate for the platform texture height.
-                highestPoints [ 1 ].x = randomXPos + 40;
-                highestPoints [ 1 ].y = randomYPos + 40;
+            if ( randomYPos > highestPoints [ 1 ].y + 80 ) {
+                // Plus 80 to compensate for the platform texture height.
+                highestPoints [ 1 ].x = randomXPos + 80;
+                highestPoints [ 1 ].y = randomYPos + 80;
             }
 
             if ( highestPoints [ 0 ].y < highestPoints [ 1 ].y ) {
