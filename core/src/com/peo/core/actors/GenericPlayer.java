@@ -71,7 +71,7 @@ public class GenericPlayer extends Actor
         }
 
         batch.draw ( currFrame, x, y - 17 );
-        playerTextFont.draw ( batch, playerName, ( ( x + ( x + width ) ) / 2 ) - 25, y + height + 30 );
+        playerTextFont.draw ( batch, playerName, ( ( x + ( x + width ) ) / 2 ) - 20, y + height + 10 );
     }
 
     @Override public void act ( float delta )
