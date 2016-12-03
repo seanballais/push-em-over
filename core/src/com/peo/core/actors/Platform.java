@@ -5,9 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.peo.utils.Box2DConversion;
-
-import javax.swing.*;
+import com.peo.utils.Physics;
 
 public class Platform extends Actor
 {
@@ -43,13 +41,13 @@ public class Platform extends Actor
     {
         BodyDef platformBodyDef = new BodyDef ();
         platformBodyDef.type = BodyDef.BodyType.StaticBody;
-        platformBodyDef.position.set ( x, y );
+        platformBodyDef.position.set ( x / Physics.PPM, y / Physics.PPM );
         platformBodyDef.fixedRotation = true;
 
         Body platformBody = physicsWorldRef.createBody ( platformBodyDef );
 
         PolygonShape platformBounds = new PolygonShape ();
-        platformBounds.setAsBox ( width / 2, height / 2 );
+        platformBounds.setAsBox ( ( width / Physics.PPM ) / 2, ( height / Physics.PPM ) / 2 );
 
         FixtureDef platformFixtureDef = new FixtureDef ();
         platformFixtureDef.shape = platformBounds;

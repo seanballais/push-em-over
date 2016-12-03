@@ -2,12 +2,11 @@ package com.peo.core.actors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.peo.utils.Box2DConversion;
+import com.peo.utils.Physics;
 
 import java.util.HashMap;
 
@@ -89,13 +88,13 @@ public class GenericPlayer extends Actor
     {
         BodyDef playerBodyDef = new BodyDef ();
         playerBodyDef.type = BodyDef.BodyType.DynamicBody;
-        playerBodyDef.position.set ( x, y );
+        playerBodyDef.position.set ( x / Physics.PPM, y / Physics.PPM );
         playerBodyDef.fixedRotation = true;
 
         Body playerBody = physicsWorldRef.createBody ( playerBodyDef );
 
         PolygonShape playerBounds = new PolygonShape ();
-        playerBounds.setAsBox ( width / 2, height / 2 );
+        playerBounds.setAsBox ( ( width / Physics.PPM ) / 2, ( height / Physics.PPM ) / 2 );
 
         FixtureDef playerFixtureDef = new FixtureDef ();
         playerFixtureDef.shape = playerBounds;

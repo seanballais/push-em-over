@@ -10,8 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.peo.core.actors.Background;
 import com.peo.core.actors.GenericPlayer;
 import com.peo.core.managers.PlatformManager;
-import com.peo.utils.Box2DConversion;
 import com.peo.utils.GamePreferences;
+import com.peo.utils.Physics;
 
 import java.awt.*;
 
@@ -60,10 +60,10 @@ public class GameScreenWorld
         Gdx.app.log ( "GameScreenWorld", "update" );
 
         physicsWorld.step ( Gdx.graphics.getDeltaTime (), 6, 2 );
-        player1.setXPos ( Math.round ( player1.getPlayerPhysicsBody ().getPosition ().x ) );
-        player1.setYPos ( Math.round ( player1.getPlayerPhysicsBody ().getPosition ().y ) );
-        player2.setXPos ( Math.round ( player2.getPlayerPhysicsBody ().getPosition ().x ) );
-        player2.setYPos ( Math.round ( player2.getPlayerPhysicsBody ().getPosition ().y ) );
+        player1.setXPos ( Math.round ( player1.getPlayerPhysicsBody ().getPosition ().x * Physics.PPM ) );
+        player1.setYPos ( Math.round ( player1.getPlayerPhysicsBody ().getPosition ().y * Physics.PPM ) );
+        player2.setXPos ( Math.round ( player2.getPlayerPhysicsBody ().getPosition ().x * Physics.PPM ) );
+        player2.setYPos ( Math.round ( player2.getPlayerPhysicsBody ().getPosition ().y * Physics.PPM ) );
         platformManager.updatePlatformPositions ();
 
         gameCamera.update ();

@@ -3,8 +3,8 @@ package com.peo.core.managers;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.peo.core.actors.Platform;
-import com.peo.utils.Box2DConversion;
 import com.peo.utils.GamePreferences;
+import com.peo.utils.Physics;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -67,8 +67,8 @@ public class PlatformManager
     public void updatePlatformPositions ()
     {
         for ( Platform platform : platforms ) {
-            platform.setXPos ( Math.round ( platform.getPlatformPhysicsBody ().getPosition ().x ) );
-            platform.setYPos ( Math.round ( platform.getPlatformPhysicsBody ().getPosition ().y ) );
+            platform.setXPos ( Math.round ( platform.getPlatformPhysicsBody ().getPosition ().x * Physics.PPM ) );
+            platform.setYPos ( Math.round ( platform.getPlatformPhysicsBody ().getPosition ().y * Physics.PPM ) );
         }
     }
 }

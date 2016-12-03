@@ -31,7 +31,7 @@ public class GameScreenRenderer
 
         playStage.act ();
         playStage.draw ();
-        box2DdebugRenderer.render ( gameWorld.getPhysicsWorld (), gameWorld.getGameCamera ().combined );
+        //box2DdebugRenderer.render ( gameWorld.getPhysicsWorld (), gameWorld.getGameCamera ().combined );
     }
 
     public void dispose ()
