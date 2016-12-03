@@ -11,8 +11,6 @@ import com.peo.utils.GamePreferences;
 public class GameScreenRenderer
 {
     private GameScreenWorld gameWorld;
-    private OrthographicCamera gameCamera;
-    private GamePreferences gamePreferences;
     private Box2DDebugRenderer box2DdebugRenderer;
     private Stage playStage;
 
@@ -20,9 +18,7 @@ public class GameScreenRenderer
     {
         this.gameWorld = gameWorld;
         box2DdebugRenderer = new Box2DDebugRenderer ();
-        gamePreferences = new GamePreferences ();
-        gameCamera = new OrthographicCamera ();
-        gameCamera.setToOrtho ( false, gamePreferences.getWidthResolution (), gamePreferences.getHeightResolution () );
+
         this.playStage = playStage;
     }
 
@@ -35,7 +31,7 @@ public class GameScreenRenderer
 
         playStage.act ();
         playStage.draw ();
-        box2DdebugRenderer.render ( gameWorld.getPhysicsWorld (), gameCamera.combined );
+        box2DdebugRenderer.render ( gameWorld.getPhysicsWorld (), gameWorld.getGameCamera ().combined );
     }
 
     public void dispose ()

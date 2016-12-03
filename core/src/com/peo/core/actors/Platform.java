@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.peo.utils.Box2DConversion;
+
+import javax.swing.*;
 
 public class Platform extends Actor
 {
@@ -29,7 +32,7 @@ public class Platform extends Actor
 
     @Override public void draw ( Batch batch, float parentAlpha )
     {
-        batch.draw ( platformTexture, x, y, width + ( width / 2 ), height + ( height / 3 ) );
+        batch.draw ( platformTexture, x, y );
     }
 
     public int setXPos ( int x ) { return this.x = x; }
@@ -41,6 +44,7 @@ public class Platform extends Actor
         BodyDef platformBodyDef = new BodyDef ();
         platformBodyDef.type = BodyDef.BodyType.StaticBody;
         platformBodyDef.position.set ( x, y );
+        platformBodyDef.fixedRotation = true;
 
         Body platformBody = physicsWorldRef.createBody ( platformBodyDef );
 

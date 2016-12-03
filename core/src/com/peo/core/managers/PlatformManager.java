@@ -3,6 +3,7 @@ package com.peo.core.managers;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.peo.core.actors.Platform;
+import com.peo.utils.Box2DConversion;
 import com.peo.utils.GamePreferences;
 
 import java.awt.Point;

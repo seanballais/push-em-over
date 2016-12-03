@@ -1,13 +1,17 @@
 package com.peo.core.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.peo.core.actors.Background;
 import com.peo.core.actors.GenericPlayer;
 import com.peo.core.managers.PlatformManager;
+import com.peo.utils.Box2DConversion;
+import com.peo.utils.GamePreferences;
 
 import java.awt.*;
 
@@ -17,11 +21,15 @@ public class GameScreenWorld
     private GenericPlayer player1;
     private GenericPlayer player2;
     private PlatformManager platformManager;
+    private GamePreferences gamePreferences;
     private World physicsWorld;
     private Stage playStage;
+    private OrthographicCamera gameCamera;
 
     public GameScreenWorld ()
     {
+        gamePreferences = new GamePreferences();
+
         playStage = new Stage ();
         physicsWorld = new World ( new Vector2 ( 0f, -20f ), true );
 
@@ -42,6 +50,9 @@ public class GameScreenWorld
 
         playStage.addActor ( player1 );
         playStage.addActor ( player2 );
+
+        gameCamera = new OrthographicCamera ();
+        gameCamera.setToOrtho ( false, gamePreferences.getWidthResolution (), gamePreferences.getHeightResolution () );
     }
 
     public void update ( float delta )
@@ -54,6 +65,8 @@ public class GameScreenWorld
         player2.setXPos ( Math.round ( player2.getPlayerPhysicsBody ().getPosition ().x ) );
         player2.setYPos ( Math.round ( player2.getPlayerPhysicsBody ().getPosition ().y ) );
         platformManager.updatePlatformPositions ();
+
+        gameCamera.update ();
     }
 
     public Stage getPlayStage ()
@@ -61,4 +74,5 @@ public class GameScreenWorld
         return playStage;
     }
     public World getPhysicsWorld () { return physicsWorld; }
+    public Camera getGameCamera () { return gameCamera; }
 }

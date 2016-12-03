@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.peo.utils.Box2DConversion;
 
 import java.util.HashMap;
 
@@ -70,7 +71,7 @@ public class GenericPlayer extends Actor
             currFrame = ( ( Animation ) animations.get ( "falling" ) ).getKeyFrame ( elapsedTime, true );
         }
 
-        batch.draw ( currFrame, x, y );
+        batch.draw ( currFrame, x, y - 17 );
         playerTextFont.draw ( batch, playerName, ( ( x + ( x + width ) ) / 2 ) - 25, y + height + 30 );
     }
 
@@ -89,6 +90,7 @@ public class GenericPlayer extends Actor
         BodyDef playerBodyDef = new BodyDef ();
         playerBodyDef.type = BodyDef.BodyType.DynamicBody;
         playerBodyDef.position.set ( x, y );
+        playerBodyDef.fixedRotation = true;
 
         Body playerBody = physicsWorldRef.createBody ( playerBodyDef );
 
