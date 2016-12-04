@@ -45,6 +45,7 @@ public class Platform extends Actor
         platformBodyDef.fixedRotation = true;
 
         Body platformBody = physicsWorldRef.createBody ( platformBodyDef );
+        platformBody.setUserData ( this );
 
         PolygonShape platformBounds = new PolygonShape ();
         platformBounds.setAsBox ( ( width / Physics.PPM ) / 2, ( height / Physics.PPM ) / 2 );

@@ -71,7 +71,12 @@ public class GenericPlayer extends Actor
         }
 
         batch.draw ( currFrame, x - width / 2, y - height / 2 );
-        playerTextFont.draw ( batch, playerName, ( ( x + ( x + width ) ) / 2 ) - 20, y + height + 10 );
+        playerTextFont.draw (
+                batch,
+                playerName,
+                ( ( x - width / 2 + ( x - width / 2 + width ) ) / 2 ) - ( width / 2 ) + 5,
+                y - height / 2 + height + 20
+        );
     }
 
     @Override public void act ( float delta )
@@ -92,6 +97,7 @@ public class GenericPlayer extends Actor
         playerBodyDef.fixedRotation = true;
 
         Body playerBody = physicsWorldRef.createBody ( playerBodyDef );
+        playerBody.setUserData ( this.playerName );
 
         PolygonShape playerBounds = new PolygonShape ();
         playerBounds.setAsBox ( ( width / Physics.PPM ) / 2, ( height / Physics.PPM ) / 2 );

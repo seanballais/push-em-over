@@ -94,6 +94,22 @@ public class GameScreenWorld
             );
         }
 
+        if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getJumpKey ( 0 ) ) ) {
+            player1.getPlayerPhysicsBody ().applyLinearImpulse (
+                    new Vector2 ( 0, impulse * 2 ),
+                    player1.getPlayerPhysicsBody ().getWorldCenter (),
+                    true
+            );
+        }
+
+        if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getJumpKey ( 1 ) ) ) {
+            player2.getPlayerPhysicsBody ().applyLinearImpulse (
+                    new Vector2 ( 0, impulse * 2 ),
+                    player2.getPlayerPhysicsBody ().getWorldCenter (),
+                    true
+            );
+        }
+
         physicsWorld.step ( Gdx.graphics.getDeltaTime (), 6, 2 );
         player1.setXPos ( Math.round ( player1.getPlayerPhysicsBody ().getPosition ().x * Physics.PPM ) );
         player1.setYPos ( Math.round ( player1.getPlayerPhysicsBody ().getPosition ().y * Physics.PPM ) );
