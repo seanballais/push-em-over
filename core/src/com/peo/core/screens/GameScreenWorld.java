@@ -13,8 +13,6 @@ import com.peo.core.managers.PlatformManager;
 import com.peo.utils.GamePreferences;
 import com.peo.utils.Physics;
 
-import java.awt.*;
-
 public class GameScreenWorld
 {
     private Background background;
@@ -39,13 +37,17 @@ public class GameScreenWorld
         platformManager = new PlatformManager ( physicsWorld );
         platformManager.setPlatforms ( playStage );
 
-        Point p1Pos = platformManager.getHighestPoints () [ 0 ];
-        Point p2Pos = platformManager.getHighestPoints () [ 1 ];
+        int p1XPos = platformManager.getXPoints () [ 0 ];
+        int p2XPos = platformManager.getXPoints () [ 1 ];
         player1 = new GenericPlayer (
-                physicsWorld, "Bob", new Color ( 0f, 102/255f, 204/255f, 1f ), p1Pos.x, p1Pos.y
+                physicsWorld, "Bob", new Color ( 0f, 102/255f, 204/255f, 1f ),
+                p1XPos,
+                gamePreferences.getHeightResolution () + 50
         );
         player2 = new GenericPlayer (
-                physicsWorld, "Joe", new Color ( 0f, 102/255f, 204/255f, 1f ), p2Pos.x, p2Pos.y
+                physicsWorld, "Joe", new Color ( 0f, 102/255f, 204/255f, 1f ),
+                p2XPos,
+                gamePreferences.getHeightResolution () + 50
         );
 
         playStage.addActor ( player1 );
@@ -58,6 +60,39 @@ public class GameScreenWorld
     public void update ( float delta )
     {
         Gdx.app.log ( "GameScreenWorld", "update" );
+
+        float impulse = player1.getPlayerPhysicsBody ().getMass () * 0.35f;
+        if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getLeftKey ( 0 ) ) ) {
+            player1.getPlayerPhysicsBody ().applyLinearImpulse (
+                    new Vector2 ( -impulse, 0 ),
+                    player1.getPlayerPhysicsBody ().getWorldCenter (),
+                    true
+            );
+        }
+
+        if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getLeftKey ( 1 ) ) ) {
+            player2.getPlayerPhysicsBody ().applyLinearImpulse (
+                    new Vector2 ( -impulse, 0 ),
+                    player2.getPlayerPhysicsBody ().getWorldCenter (),
+                    true
+            );
+        }
+
+        if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getRightKey ( 0 ) ) ) {
+            player1.getPlayerPhysicsBody ().applyLinearImpulse (
+                    new Vector2 ( impulse, 0 ),
+                    player1.getPlayerPhysicsBody ().getWorldCenter (),
+                    true
+            );
+        }
+
+        if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getRightKey ( 1 ) ) ) {
+            player2.getPlayerPhysicsBody ().applyLinearImpulse (
+                    new Vector2 ( impulse, 0 ),
+                    player2.getPlayerPhysicsBody ().getWorldCenter (),
+                    true
+            );
+        }
 
         physicsWorld.step ( Gdx.graphics.getDeltaTime (), 6, 2 );
         player1.setXPos ( Math.round ( player1.getPlayerPhysicsBody ().getPosition ().x * Physics.PPM ) );

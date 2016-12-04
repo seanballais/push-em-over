@@ -70,7 +70,7 @@ public class GenericPlayer extends Actor
             currFrame = ( ( Animation ) animations.get ( "falling" ) ).getKeyFrame ( elapsedTime, true );
         }
 
-        batch.draw ( currFrame, x, y - 17 );
+        batch.draw ( currFrame, x - width / 2, y - height / 2 );
         playerTextFont.draw ( batch, playerName, ( ( x + ( x + width ) ) / 2 ) - 20, y + height + 10 );
     }
 
@@ -99,6 +99,7 @@ public class GenericPlayer extends Actor
         FixtureDef playerFixtureDef = new FixtureDef ();
         playerFixtureDef.shape = playerBounds;
         playerFixtureDef.density = 1f;
+        playerFixtureDef.friction = 0.5f;
 
         Fixture playerFixture = playerBody.createFixture ( playerFixtureDef );
 

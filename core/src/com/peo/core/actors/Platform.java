@@ -30,7 +30,7 @@ public class Platform extends Actor
 
     @Override public void draw ( Batch batch, float parentAlpha )
     {
-        batch.draw ( platformTexture, x, y );
+        batch.draw ( platformTexture, x - width / 2, y - height / 2 );
     }
 
     public int setXPos ( int x ) { return this.x = x; }

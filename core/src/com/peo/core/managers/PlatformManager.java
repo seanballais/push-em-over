@@ -6,14 +6,13 @@ import com.peo.core.actors.Platform;
 import com.peo.utils.GamePreferences;
 import com.peo.utils.Physics;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class PlatformManager
 {
     private GamePreferences gamePreferences;
-    private Point [] highestPoints;
+    private int [] highestX;
     private World physicsWorldRef;
     private ArrayList < Platform > platforms;
     public int numPlatforms;
@@ -23,9 +22,9 @@ public class PlatformManager
         this.physicsWorldRef = physicsWorldRef;
         platforms = new ArrayList < Platform > ();
         gamePreferences = new GamePreferences ();
-        highestPoints = new Point [ 2 ];
-        highestPoints [ 0 ] = new Point ( 0, 0 );
-        highestPoints [ 1 ] = new Point ( 0, 0 );
+        highestX = new int [ 2 ];
+        highestX [ 0 ] = 0;
+        highestX [ 1 ] = 0;
         numPlatforms = 25;
     }
 
@@ -38,20 +37,11 @@ public class PlatformManager
         for ( int ctr = 0; ctr < numPlatforms; ctr++ ) {
             randomXPos = new Random ().nextInt ( 10 ) * ( screenWidth / 10 );
             randomYPos = new Random ().nextInt ( 5 ) * ( screenHeight / 5 );
-            if ( randomYPos > highestPoints [ 1 ].y + 80 ) {
-                // Plus 80 to compensate for the platform texture height.
-                highestPoints [ 1 ].x = randomXPos + 80;
-                highestPoints [ 1 ].y = randomYPos + 80;
-            }
 
-            if ( highestPoints [ 0 ].y < highestPoints [ 1 ].y ) {
-                int tmpX = highestPoints [ 0 ].x;
-                int tmpY = highestPoints [ 0 ].y;
-
-                highestPoints [ 0 ].x = highestPoints [ 1 ].x;
-                highestPoints [ 0 ].y = highestPoints [ 1 ].y;
-                highestPoints [ 1 ].x = tmpX;
-                highestPoints [ 1 ].y = tmpY;
+            if ( ctr == 0 ) {
+                highestX [ 0 ] = randomXPos;
+            } else if ( ctr == 1 ) {
+                highestX [ 1 ] = randomXPos;
             }
 
             platforms.add ( new Platform( physicsWorldRef, randomXPos, randomYPos ) );
@@ -59,9 +49,9 @@ public class PlatformManager
         }
     }
 
-    public Point [] getHighestPoints ()
+    public int [] getXPoints ()
     {
-        return highestPoints;
+        return highestX;
     }
 
     public void updatePlatformPositions ()
