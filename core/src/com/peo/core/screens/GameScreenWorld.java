@@ -5,10 +5,12 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.peo.core.actors.Background;
 import com.peo.core.actors.GenericPlayer;
+import com.peo.core.actors.PlayerStateEnum;
+import com.peo.core.actors.Trap;
 import com.peo.core.managers.PlatformManager;
 import com.peo.core.managers.TrapManager;
 import com.peo.utils.GamePreferences;
@@ -60,6 +62,44 @@ public class GameScreenWorld
 
         gameCamera = new OrthographicCamera ();
         gameCamera.setToOrtho ( false, gamePreferences.getWidthResolution (), gamePreferences.getHeightResolution () );
+
+        physicsWorld.setContactListener ( new ContactListener () {
+            @Override
+            public void beginContact ( Contact contact ) {
+                for ( Trap trap : trapManager.getTraps () ) {
+                    if ( ( contact.getFixtureA ().getBody () == player1.getPlayerPhysicsBody () &&
+                            contact.getFixtureB ().getBody () == trap.getTrapPhysicsBody () ) ||
+                            ( contact.getFixtureB ().getBody () == player1.getPlayerPhysicsBody () &&
+                                contact.getFixtureA ().getBody () == trap.getTrapPhysicsBody () ) ) {
+                        player1.setPlayerState ( PlayerStateEnum.FALLING );
+                        player1.kill ();
+
+                        System.out.println ( "Bob is dead." );
+                    } else if ( ( contact.getFixtureA ().getBody () == player2.getPlayerPhysicsBody () &&
+                            contact.getFixtureB ().getBody () == trap.getTrapPhysicsBody () ) ||
+                            ( contact.getFixtureB ().getBody () == player1.getPlayerPhysicsBody () &&
+                                contact.getFixtureA ().getBody () == trap.getTrapPhysicsBody () ) ) {
+                        player2.setPlayerState ( PlayerStateEnum.FALLING );
+                        player2.kill ();
+                    }
+                }
+            }
+
+            @Override
+            public void endContact(Contact contact) {
+
+            }
+
+            @Override
+            public void preSolve(Contact contact, Manifold oldManifold) {
+
+            }
+
+            @Override
+            public void postSolve(Contact contact, ContactImpulse impulse) {
+
+            }
+        });
     }
 
     public void update ( float delta )

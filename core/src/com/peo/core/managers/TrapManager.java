@@ -39,6 +39,11 @@ public class TrapManager
         }
     }
 
+    public ArrayList <Trap> getTraps ()
+    {
+        return traps;
+    }
+
     public void updateTrapPositions ()
     {
         for ( Trap trap : traps) {

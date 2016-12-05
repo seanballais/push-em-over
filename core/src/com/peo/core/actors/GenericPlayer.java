@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.peo.utils.Physics;
@@ -24,6 +23,7 @@ public class GenericPlayer extends Actor
     private int height;
     private int fuelLength;
     private boolean canFly;
+    private boolean alive;
     private float elapsedTime;
     private PlayerStateEnum playerState;
     private HashMap < String, Object > animations;
@@ -46,6 +46,7 @@ public class GenericPlayer extends Actor
         height = 60;
         elapsedTime = 0;
         canFly = true;
+        alive = true;
         playerState = PlayerStateEnum.WALKING;
         playerSpritesheet = new Texture ( Gdx.files.internal ( "img/actors/player-spritesheet.jpg" ) );
         playerFuelSheet = new Texture ( Gdx.files.internal ( "img/actors/playerfuel.png" ) );
@@ -66,8 +67,10 @@ public class GenericPlayer extends Actor
     public void setYPos ( int y ) { this.y = y; }
     public void setCanFly ( boolean flyState ) { canFly = flyState; }
     public void setFuelLength ( int length ) { fuelLength = length; }
+    public void kill () { alive = false; }
     public int getFuelLength () { return fuelLength; }
     public boolean isCanFly () { return canFly; }
+    public boolean isAlive () { return alive; }
 
     @Override public void draw ( Batch batch, float parentAlpha )
     {
