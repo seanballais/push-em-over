@@ -13,6 +13,7 @@ public class Background extends Actor
     private GamePreferences gamePreferences;
     private int bgFrameCount;
     private int frameTimer;
+    private boolean firstDraw;
 
     public Background ()
     {
@@ -20,6 +21,7 @@ public class Background extends Actor
         gamePreferences = new GamePreferences();
         bgFrameCount = 0;
         frameTimer = 20;
+        firstDraw = true;
 
         int frameNumber;
         int frameXPos;

@@ -13,7 +13,8 @@ import java.util.HashMap;
 
 public class GenericPlayer extends Actor
 {
-    private Texture playerSpritesheet;
+    private static Texture playerSpritesheet;
+    private static Texture playerFuelSheet;
     private String playerName;
     private Color playerTextColor;
     private BitmapFont playerTextFont;
@@ -26,9 +27,9 @@ public class GenericPlayer extends Actor
     private float elapsedTime;
     private PlayerStateEnum playerState;
     private HashMap < String, Object > animations;
+    private HashMap < String, TextureRegion > playerFuelBar;
     private World physicsWorldRef;
     private Body playerPhysicsBody;
-    private ShapeRenderer fuelDrawer;
 
     public GenericPlayer ( World physicsWorldRef, String playerName, Color playerTextColor, int x, int y )
     {
@@ -47,10 +48,12 @@ public class GenericPlayer extends Actor
         canFly = true;
         playerState = PlayerStateEnum.WALKING;
         playerSpritesheet = new Texture ( Gdx.files.internal ( "img/actors/player-spritesheet.jpg" ) );
+        playerFuelSheet = new Texture ( Gdx.files.internal ( "img/actors/playerfuel.png" ) );
         animations = new HashMap < String, Object > ();
-        fuelDrawer = new ShapeRenderer ();
+        playerFuelBar = new HashMap < String, TextureRegion > ();
 
         setAnimations ();
+        setFuelBar ();
 
         playerPhysicsBody = createBody ();
     }
@@ -61,6 +64,7 @@ public class GenericPlayer extends Actor
     }
     public void setXPos ( int x ) { this.x = x; }
     public void setYPos ( int y ) { this.y = y; }
+    public void setCanFly ( boolean flyState ) { canFly = flyState; }
     public void setFuelLength ( int length ) { fuelLength = length; }
     public int getFuelLength () { return fuelLength; }
     public boolean isCanFly () { return canFly; }
@@ -77,29 +81,27 @@ public class GenericPlayer extends Actor
         } else if ( playerState == PlayerStateEnum.FALLING ) {
             currFrame = ( ( Animation ) animations.get ( "falling" ) ).getKeyFrame ( elapsedTime, true );
         }
-
         batch.draw ( currFrame, x - width / 2, y - height / 2 );
         playerTextFont.draw (
                 batch,
                 playerName,
                 ( ( x - width / 2 + ( x - width / 2 + width ) ) / 2 ) - ( width / 2 ) + 5,
-                y - height / 2 + height + 20
+                y - height / 2 + height + 40
         );
 
-        fuelDrawer.begin ( ShapeRenderer.ShapeType.Line );
-        fuelDrawer.setColor ( Color.DARK_GRAY );
-        fuelDrawer.rect( x - width, y + ( height - 20 ), 100, 10 );
-        fuelDrawer.end ();
-
-        fuelDrawer.begin ( ShapeRenderer.ShapeType.Filled );
-        fuelDrawer.setColor ( Color.GOLD );
-        fuelDrawer.rect( x - width, y + ( height - 20 ), fuelLength, 10 );
-        fuelDrawer.end ();
+        batch.draw ( playerFuelBar.get ( "barOutline" ), x - width, y + ( height - 25 ), 104, 12 );
+        batch.draw ( playerFuelBar.get ( "barFilling" ), ( x - width ) + 2, y + ( height - 23 ), fuelLength, 8 );
     }
 
     @Override public void act ( float delta )
     {
         elapsedTime += Gdx.graphics.getDeltaTime ();
+
+        if ( fuelLength >= 100 ) {
+            canFly = true;
+        } else if ( fuelLength <= 0 ) {
+            canFly = false;
+        }
     }
 
     public Body getPlayerPhysicsBody ()
@@ -130,6 +132,15 @@ public class GenericPlayer extends Actor
         playerBounds.dispose ();
 
         return playerBody;
+    }
+
+    private void setFuelBar ()
+    {
+        TextureRegion fuelBarOutline = new TextureRegion ( playerFuelSheet, 0, 0, 6, 15 );
+        TextureRegion fuelBarFilling = new TextureRegion ( playerFuelSheet, 6, 2, 2, 11 );
+
+        playerFuelBar.put ( "barOutline", fuelBarOutline );
+        playerFuelBar.put ( "barFilling", fuelBarFilling );
     }
 
     private void setAnimations ()

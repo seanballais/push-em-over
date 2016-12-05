@@ -100,19 +100,43 @@ public class GameScreenWorld
         }
 
         if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getJumpKey ( 0 ) ) ) {
-            player1.getPlayerPhysicsBody ().applyLinearImpulse (
-                    new Vector2 ( 0, impulse * 2 ),
-                    player1.getPlayerPhysicsBody ().getWorldCenter (),
-                    true
-            );
+            if ( player1.getFuelLength () < 100 && !player1.isCanFly () ) {
+                player1.setFuelLength ( Math.min ( player1.getFuelLength () + 1, 100 ) );
+            } else if ( player1.isCanFly () ) {
+                player1.getPlayerPhysicsBody().applyLinearImpulse(
+                        new Vector2(0, impulse * 2),
+                        player1.getPlayerPhysicsBody().getWorldCenter(),
+                        true
+                );
+
+                player1.setFuelLength ( Math.max ( player1.getFuelLength () - 2, 0 ) );
+            }
         }
 
         if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getJumpKey ( 1 ) ) ) {
-            player2.getPlayerPhysicsBody ().applyLinearImpulse (
-                    new Vector2 ( 0, impulse * 2 ),
-                    player2.getPlayerPhysicsBody ().getWorldCenter (),
-                    true
-            );
+            if ( player2.getFuelLength () < 100 && !player2.isCanFly () ) {
+                player2.setFuelLength ( Math.min ( player2.getFuelLength () + 1, 100 ) );
+            } else if ( player2.isCanFly () ) {
+                player2.getPlayerPhysicsBody ().applyLinearImpulse (
+                        new Vector2 ( 0, impulse * 2 ),
+                        player2.getPlayerPhysicsBody ().getWorldCenter (),
+                        true
+                );
+
+                player2.setFuelLength ( Math.max ( player2.getFuelLength () - 2, 0 ) );
+            }
+        }
+
+        if ( !Gdx.input.isKeyPressed ( GamePreferences.getInstance ().getJumpKey ( 0 ) ) ) {
+            if ( player1.getFuelLength () < 100 ) {
+                player1.setFuelLength ( Math.min ( player1.getFuelLength () + 1, 100 ) );
+            }
+        }
+
+        if ( !Gdx.input.isKeyPressed ( GamePreferences.getInstance().getJumpKey ( 1 ) ) ) {
+            if ( player2.getFuelLength () < 100 ) {
+                player2.setFuelLength ( Math.min ( player2.getFuelLength () + 1, 100 ) );
+            }
         }
 
         physicsWorld.step ( Gdx.graphics.getDeltaTime (), 6, 2 );
