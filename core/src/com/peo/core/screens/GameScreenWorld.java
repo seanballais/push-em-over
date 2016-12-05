@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.peo.core.actors.Background;
 import com.peo.core.actors.GenericPlayer;
 import com.peo.core.managers.PlatformManager;
+import com.peo.core.managers.TrapManager;
 import com.peo.utils.GamePreferences;
 import com.peo.utils.Physics;
 
@@ -19,6 +20,7 @@ public class GameScreenWorld
     private GenericPlayer player1;
     private GenericPlayer player2;
     private PlatformManager platformManager;
+    private TrapManager trapManager;
     private GamePreferences gamePreferences;
     private World physicsWorld;
     private Stage playStage;
@@ -52,6 +54,9 @@ public class GameScreenWorld
 
         playStage.addActor ( player1 );
         playStage.addActor ( player2 );
+
+        trapManager = new TrapManager ( physicsWorld );
+        trapManager.setTraps ( playStage );
 
         gameCamera = new OrthographicCamera ();
         gameCamera.setToOrtho ( false, gamePreferences.getWidthResolution (), gamePreferences.getHeightResolution () );
@@ -116,6 +121,7 @@ public class GameScreenWorld
         player2.setXPos ( Math.round ( player2.getPlayerPhysicsBody ().getPosition ().x * Physics.PPM ) );
         player2.setYPos ( Math.round ( player2.getPlayerPhysicsBody ().getPosition ().y * Physics.PPM ) );
         platformManager.updatePlatformPositions ();
+        trapManager.updateTrapPositions ();
 
         gameCamera.update ();
     }

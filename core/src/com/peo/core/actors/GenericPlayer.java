@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.peo.utils.Physics;
@@ -12,7 +13,7 @@ import java.util.HashMap;
 
 public class GenericPlayer extends Actor
 {
-    private static Texture playerSpritesheet;
+    private Texture playerSpritesheet;
     private String playerName;
     private Color playerTextColor;
     private BitmapFont playerTextFont;
@@ -20,11 +21,14 @@ public class GenericPlayer extends Actor
     private int y;
     private int width;
     private int height;
+    private int fuelLength;
+    private boolean canFly;
     private float elapsedTime;
     private PlayerStateEnum playerState;
     private HashMap < String, Object > animations;
     private World physicsWorldRef;
     private Body playerPhysicsBody;
+    private ShapeRenderer fuelDrawer;
 
     public GenericPlayer ( World physicsWorldRef, String playerName, Color playerTextColor, int x, int y )
     {
@@ -33,15 +37,18 @@ public class GenericPlayer extends Actor
         this.playerName = playerName;
         this.playerTextColor = playerTextColor;
         this.physicsWorldRef = physicsWorldRef;
+        fuelLength = 100;
         playerTextFont = new BitmapFont ();
         playerTextFont.setColor ( this.playerTextColor );
         playerTextFont.getData ().setScale ( 1.5f );
         width = 50;
         height = 60;
         elapsedTime = 0;
+        canFly = true;
         playerState = PlayerStateEnum.WALKING;
         playerSpritesheet = new Texture ( Gdx.files.internal ( "img/actors/player-spritesheet.jpg" ) );
         animations = new HashMap < String, Object > ();
+        fuelDrawer = new ShapeRenderer ();
 
         setAnimations ();
 
@@ -54,8 +61,9 @@ public class GenericPlayer extends Actor
     }
     public void setXPos ( int x ) { this.x = x; }
     public void setYPos ( int y ) { this.y = y; }
-    public int getXPos () { return this.x; }
-    public int getYPos () { return this.y; }
+    public void setFuelLength ( int length ) { fuelLength = length; }
+    public int getFuelLength () { return fuelLength; }
+    public boolean isCanFly () { return canFly; }
 
     @Override public void draw ( Batch batch, float parentAlpha )
     {
@@ -77,6 +85,16 @@ public class GenericPlayer extends Actor
                 ( ( x - width / 2 + ( x - width / 2 + width ) ) / 2 ) - ( width / 2 ) + 5,
                 y - height / 2 + height + 20
         );
+
+        fuelDrawer.begin ( ShapeRenderer.ShapeType.Line );
+        fuelDrawer.setColor ( Color.DARK_GRAY );
+        fuelDrawer.rect( x - width, y + ( height - 20 ), 100, 10 );
+        fuelDrawer.end ();
+
+        fuelDrawer.begin ( ShapeRenderer.ShapeType.Filled );
+        fuelDrawer.setColor ( Color.GOLD );
+        fuelDrawer.rect( x - width, y + ( height - 20 ), fuelLength, 10 );
+        fuelDrawer.end ();
     }
 
     @Override public void act ( float delta )
