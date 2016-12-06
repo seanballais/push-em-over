@@ -7,10 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.peo.core.actors.Background;
-import com.peo.core.actors.GenericPlayer;
-import com.peo.core.actors.PlayerStateEnum;
-import com.peo.core.actors.Trap;
+import com.peo.core.actors.*;
 import com.peo.core.managers.PlatformManager;
 import com.peo.core.managers.TrapManager;
 import com.peo.utils.GamePreferences;
@@ -21,6 +18,7 @@ public class GameScreenWorld
     private Background background;
     private GenericPlayer player1;
     private GenericPlayer player2;
+    private TransparentBackground resultBackground;
     private PlatformManager platformManager;
     private TrapManager trapManager;
     private GamePreferences gamePreferences;
@@ -29,12 +27,16 @@ public class GameScreenWorld
     private Stage resultStage;
     private OrthographicCamera gameCamera;
     private Music levelMusic;
+    private GameScreenStateEnum screenState;
 
     public GameScreenWorld ()
     {
         gamePreferences = new GamePreferences();
 
+        screenState = GameScreenStateEnum.PLAY;
+
         playStage = new Stage ();
+        resultStage = new Stage ();
         physicsWorld = new World ( new Vector2 ( 0f, -20f ), true );
 
         background = new Background ();
@@ -62,6 +64,10 @@ public class GameScreenWorld
         trapManager = new TrapManager ( physicsWorld );
         trapManager.setTraps ( playStage );
 
+        resultBackground = new TransparentBackground ();
+
+        resultStage.addActor ( resultBackground );
+
         gameCamera = new OrthographicCamera ();
         gameCamera.setToOrtho ( false, gamePreferences.getWidthResolution (), gamePreferences.getHeightResolution () );
 
@@ -76,13 +82,17 @@ public class GameScreenWorld
                         player1.setPlayerState ( PlayerStateEnum.FALLING );
                         player1.kill ();
 
-                        System.out.println ( "Bob is dead." );
-                    } else if ( ( contact.getFixtureA ().getBody () == player2.getPlayerPhysicsBody () &&
+                        screenState = GameScreenStateEnum.RESULT;
+                    }
+
+                    if ( ( contact.getFixtureA ().getBody () == player2.getPlayerPhysicsBody () &&
                             contact.getFixtureB ().getBody () == trap.getTrapPhysicsBody () ) ||
-                            ( contact.getFixtureB ().getBody () == player1.getPlayerPhysicsBody () &&
+                            ( contact.getFixtureB ().getBody () == player2.getPlayerPhysicsBody () &&
                                 contact.getFixtureA ().getBody () == trap.getTrapPhysicsBody () ) ) {
                         player2.setPlayerState ( PlayerStateEnum.FALLING );
                         player2.kill ();
+
+                        screenState = GameScreenStateEnum.RESULT;
                     }
                 }
             }
@@ -111,88 +121,100 @@ public class GameScreenWorld
 
     public void update ( float delta )
     {
-        Gdx.app.log ( "GameScreenWorld", "update" );
-
-        float impulse = player1.getPlayerPhysicsBody ().getMass () * 0.35f;
-        if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getLeftKey ( 0 ) ) ) {
-            player1.getPlayerPhysicsBody ().applyLinearImpulse (
-                    new Vector2 ( -impulse, 0 ),
-                    player1.getPlayerPhysicsBody ().getWorldCenter (),
-                    true
-            );
-        }
-
-        if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getLeftKey ( 1 ) ) ) {
-            player2.getPlayerPhysicsBody ().applyLinearImpulse (
-                    new Vector2 ( -impulse, 0 ),
-                    player2.getPlayerPhysicsBody ().getWorldCenter (),
-                    true
-            );
-        }
-
-        if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getRightKey ( 0 ) ) ) {
-            player1.getPlayerPhysicsBody ().applyLinearImpulse (
-                    new Vector2 ( impulse, 0 ),
-                    player1.getPlayerPhysicsBody ().getWorldCenter (),
-                    true
-            );
-        }
-
-        if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getRightKey ( 1 ) ) ) {
-            player2.getPlayerPhysicsBody ().applyLinearImpulse (
-                    new Vector2 ( impulse, 0 ),
-                    player2.getPlayerPhysicsBody ().getWorldCenter (),
-                    true
-            );
-        }
-
-        if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getJumpKey ( 0 ) ) ) {
-            if ( player1.getFuelLength () < 100 && !player1.isCanFly () ) {
-                player1.setFuelLength ( Math.min ( player1.getFuelLength () + 1, 100 ) );
-            } else if ( player1.isCanFly () ) {
-                player1.getPlayerPhysicsBody().applyLinearImpulse(
-                        new Vector2(0, impulse * 2),
-                        player1.getPlayerPhysicsBody().getWorldCenter(),
+        if ( player1.isAlive () && player2.isAlive () ) {
+            float impulse = player1.getPlayerPhysicsBody ().getMass () * 0.35f;
+            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getLeftKey ( 0 ) ) ) {
+                player1.getPlayerPhysicsBody ().applyLinearImpulse (
+                        new Vector2 ( -impulse, 0 ),
+                        player1.getPlayerPhysicsBody ().getWorldCenter (),
                         true
                 );
-
-                player1.setFuelLength ( Math.max ( player1.getFuelLength () - 2, 0 ) );
             }
-        }
 
-        if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getJumpKey ( 1 ) ) ) {
-            if ( player2.getFuelLength () < 100 && !player2.isCanFly () ) {
-                player2.setFuelLength ( Math.min ( player2.getFuelLength () + 1, 100 ) );
-            } else if ( player2.isCanFly () ) {
+            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getLeftKey ( 1 ) ) ) {
                 player2.getPlayerPhysicsBody ().applyLinearImpulse (
-                        new Vector2 ( 0, impulse * 2 ),
+                        new Vector2 ( -impulse, 0 ),
                         player2.getPlayerPhysicsBody ().getWorldCenter (),
                         true
                 );
-
-                player2.setFuelLength ( Math.max ( player2.getFuelLength () - 2, 0 ) );
             }
-        }
 
-        if ( !Gdx.input.isKeyPressed ( GamePreferences.getInstance ().getJumpKey ( 0 ) ) ) {
-            if ( player1.getFuelLength () < 100 ) {
-                player1.setFuelLength ( Math.min ( player1.getFuelLength () + 1, 100 ) );
+            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getRightKey ( 0 ) ) ) {
+                player1.getPlayerPhysicsBody ().applyLinearImpulse (
+                        new Vector2 ( impulse, 0 ),
+                        player1.getPlayerPhysicsBody ().getWorldCenter (),
+                        true
+                );
             }
-        }
 
-        if ( !Gdx.input.isKeyPressed ( GamePreferences.getInstance().getJumpKey ( 1 ) ) ) {
-            if ( player2.getFuelLength () < 100 ) {
-                player2.setFuelLength ( Math.min ( player2.getFuelLength () + 1, 100 ) );
+            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getRightKey ( 1 ) ) ) {
+                player2.getPlayerPhysicsBody ().applyLinearImpulse (
+                        new Vector2 ( impulse, 0 ),
+                        player2.getPlayerPhysicsBody ().getWorldCenter (),
+                        true
+                );
             }
-        }
 
-        physicsWorld.step ( Gdx.graphics.getDeltaTime (), 6, 2 );
-        player1.setXPos ( Math.round ( player1.getPlayerPhysicsBody ().getPosition ().x * Physics.PPM ) );
-        player1.setYPos ( Math.round ( player1.getPlayerPhysicsBody ().getPosition ().y * Physics.PPM ) );
-        player2.setXPos ( Math.round ( player2.getPlayerPhysicsBody ().getPosition ().x * Physics.PPM ) );
-        player2.setYPos ( Math.round ( player2.getPlayerPhysicsBody ().getPosition ().y * Physics.PPM ) );
-        platformManager.updatePlatformPositions ();
-        trapManager.updateTrapPositions ();
+            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getJumpKey ( 0 ) ) ) {
+                if ( player1.getFuelLength () < 100 && !player1.isCanFly () ) {
+                    player1.setFuelLength ( Math.min ( player1.getFuelLength () + 1, 100 ) );
+                } else if ( player1.isCanFly () ) {
+                    player1.getPlayerPhysicsBody().applyLinearImpulse(
+                            new Vector2(0, impulse * 2),
+                            player1.getPlayerPhysicsBody().getWorldCenter(),
+                            true
+                    );
+
+                    player1.setFuelLength ( Math.max ( player1.getFuelLength () - 2, 0 ) );
+                }
+            }
+
+            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getJumpKey ( 1 ) ) ) {
+                if ( player2.getFuelLength () < 100 && !player2.isCanFly () ) {
+                    player2.setFuelLength ( Math.min ( player2.getFuelLength () + 1, 100 ) );
+                } else if ( player2.isCanFly () ) {
+                    player2.getPlayerPhysicsBody ().applyLinearImpulse (
+                            new Vector2 ( 0, impulse * 2 ),
+                            player2.getPlayerPhysicsBody ().getWorldCenter (),
+                            true
+                    );
+
+                    player2.setFuelLength ( Math.max ( player2.getFuelLength () - 2, 0 ) );
+                }
+            }
+
+            if ( !Gdx.input.isKeyPressed ( GamePreferences.getInstance ().getJumpKey ( 0 ) ) ) {
+                if ( player1.getFuelLength () < 100 ) {
+                    player1.setFuelLength ( Math.min ( player1.getFuelLength () + 1, 100 ) );
+                }
+            }
+
+            if ( !Gdx.input.isKeyPressed ( GamePreferences.getInstance().getJumpKey ( 1 ) ) ) {
+                if ( player2.getFuelLength () < 100 ) {
+                    player2.setFuelLength ( Math.min ( player2.getFuelLength () + 1, 100 ) );
+                }
+            }
+
+            if ( player1.getYPos () < 0 ) {
+                player1.kill ();
+
+                screenState = GameScreenStateEnum.RESULT;
+            }
+
+            if ( player2.getYPos () < 0 ) {
+                player2.kill ();
+
+                screenState = GameScreenStateEnum.RESULT;
+            }
+
+            physicsWorld.step ( Gdx.graphics.getDeltaTime (), 6, 2 );
+            player1.setXPos ( Math.round ( player1.getPlayerPhysicsBody ().getPosition ().x * Physics.PPM ) );
+            player1.setYPos ( Math.round ( player1.getPlayerPhysicsBody ().getPosition ().y * Physics.PPM ) );
+            player2.setXPos ( Math.round ( player2.getPlayerPhysicsBody ().getPosition ().x * Physics.PPM ) );
+            player2.setYPos ( Math.round ( player2.getPlayerPhysicsBody ().getPosition ().y * Physics.PPM ) );
+            platformManager.updatePlatformPositions ();
+            trapManager.updateTrapPositions ();
+        }
 
         gameCamera.update ();
     }
@@ -201,4 +223,6 @@ public class GameScreenWorld
     {
         return playStage;
     }
+    public Stage getResultStage () { return  resultStage; }
+    public GameScreenStateEnum getScreenState () { return screenState; }
 }
