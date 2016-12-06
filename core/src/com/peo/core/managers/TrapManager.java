@@ -14,7 +14,7 @@ public class TrapManager
     private GamePreferences gamePreferences;
     private World physicsWorldRef;
     private ArrayList < Trap > traps;
-    public int numPlatforms;
+    private int numPlatforms;
 
     public TrapManager ( World physicsWorldRef )
     {
@@ -32,7 +32,7 @@ public class TrapManager
         int randomYPos;
         for ( int ctr = 0; ctr < numPlatforms; ctr++ ) {
             randomXPos = new Random ().nextInt ( 10 ) * ( screenWidth / 10 ) + 25;
-            randomYPos = new Random ().nextInt ( 5 ) * ( screenHeight / 5 ) + 10;
+            randomYPos = new Random ().nextInt ( 5 ) * ( ( screenHeight / 2 ) / 5 ) + 10;
 
             traps.add ( new Trap ( physicsWorldRef, randomXPos, randomYPos ) );
             playStage.addActor ( traps.get ( ctr ) );

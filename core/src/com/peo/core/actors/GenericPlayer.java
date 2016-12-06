@@ -68,6 +68,7 @@ public class GenericPlayer extends Actor
     public void setCanFly ( boolean flyState ) { canFly = flyState; }
     public void setFuelLength ( int length ) { fuelLength = length; }
     public void kill () { alive = false; }
+    public void resurrect () { alive = true; }
     public int getFuelLength () { return fuelLength; }
     public boolean isCanFly () { return canFly; }
     public boolean isAlive () { return alive; }
@@ -130,6 +131,7 @@ public class GenericPlayer extends Actor
         playerFixtureDef.shape = playerBounds;
         playerFixtureDef.density = 1f;
         playerFixtureDef.friction = 0.5f;
+        playerFixtureDef.restitution = 0.3f;
 
         Fixture playerFixture = playerBody.createFixture ( playerFixtureDef );
 

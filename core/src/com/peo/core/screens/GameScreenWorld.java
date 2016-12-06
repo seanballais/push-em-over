@@ -1,9 +1,11 @@
 package com.peo.core.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,6 +14,8 @@ import com.peo.core.managers.PlatformManager;
 import com.peo.core.managers.TrapManager;
 import com.peo.utils.GamePreferences;
 import com.peo.utils.Physics;
+
+import java.util.Random;
 
 public class GameScreenWorld
 {
@@ -28,6 +32,8 @@ public class GameScreenWorld
     private OrthographicCamera gameCamera;
     private Music levelMusic;
     private GameScreenStateEnum screenState;
+    private int p1XPos;
+    private int p2XPos;
 
     public GameScreenWorld ()
     {
@@ -45,8 +51,8 @@ public class GameScreenWorld
         platformManager = new PlatformManager ( physicsWorld );
         platformManager.setPlatforms ( playStage );
 
-        int p1XPos = platformManager.getXPoints () [ 0 ];
-        int p2XPos = platformManager.getXPoints () [ 1 ];
+        p1XPos = platformManager.getXPoints () [ 0 ];
+        p2XPos = platformManager.getXPoints () [ 1 ];
         player1 = new GenericPlayer (
                 physicsWorld, "Bob", new Color ( 0f, 102/255f, 204/255f, 1f ),
                 p1XPos,
@@ -67,6 +73,14 @@ public class GameScreenWorld
         resultBackground = new TransparentBackground ();
 
         resultStage.addActor ( resultBackground );
+        resultStage.addActor ( new Title () );
+        resultStage.addActor ( new PlayAgainText () );
+        resultStage.addActor(
+            new WinnerText ( new Texture ( Gdx.files.internal ( "img/actors/joe-wins.png" ) ), player1 )
+        );
+        resultStage.addActor(
+            new WinnerText ( new Texture ( Gdx.files.internal ( "img/actors/bob-wins.png" ) ), player2 )
+        );
 
         gameCamera = new OrthographicCamera ();
         gameCamera.setToOrtho ( false, gamePreferences.getWidthResolution (), gamePreferences.getHeightResolution () );
@@ -195,13 +209,13 @@ public class GameScreenWorld
                 }
             }
 
-            if ( player1.getYPos () < 0 ) {
+            if ( player1.getYPos () < -90 ) {
                 player1.kill ();
 
                 screenState = GameScreenStateEnum.RESULT;
             }
 
-            if ( player2.getYPos () < 0 ) {
+            if ( player2.getYPos () < -90 ) {
                 player2.kill ();
 
                 screenState = GameScreenStateEnum.RESULT;
@@ -217,6 +231,33 @@ public class GameScreenWorld
         }
 
         gameCamera.update ();
+
+        if ( Gdx.input.isKeyPressed ( Input.Keys.ENTER ) && screenState == GameScreenStateEnum.RESULT ) {
+            reset ();
+        }
+    }
+
+    private void reset ()
+    {
+        int x1Pos = new Random().nextInt ( 10 ) * ( gamePreferences.getWidthResolution () / 10 );
+        int x2Pos = new Random().nextInt ( 10 ) * ( gamePreferences.getWidthResolution () / 10 );
+
+        player1.resurrect ();
+        player2.resurrect ();
+        player1.setPlayerState ( PlayerStateEnum.WALKING );
+        player2.setPlayerState ( PlayerStateEnum.WALKING );
+        player1.getPlayerPhysicsBody ().setTransform (
+            ( float ) x1Pos / Physics.PPM,
+            ( float ) ( gamePreferences.getHeightResolution () - 100 ) / Physics.PPM,
+            player1.getPlayerPhysicsBody ().getAngle ()
+        );
+        player2.getPlayerPhysicsBody ().setTransform (
+                ( float ) x2Pos / Physics.PPM,
+                ( float ) ( gamePreferences.getHeightResolution () - 100 ) / Physics.PPM,
+                player1.getPlayerPhysicsBody ().getAngle ()
+        );
+
+        screenState = GameScreenStateEnum.PLAY;
     }
 
     public Stage getPlayStage ()
