@@ -32,6 +32,7 @@ public class GameScreenWorld
     private OrthographicCamera gameCamera;
     private Music levelMusic;
     private GameScreenStateEnum screenState;
+    private AnnouncerText announcerText;
     private float deltaTime;
     private int p1XPos;
     private int p2XPos;
@@ -82,8 +83,10 @@ public class GameScreenWorld
             new WinnerText ( new Texture ( Gdx.files.internal ( "img/actors/joe-wins.png" ) ), player2 )
         );
 
+        announcerText = new AnnouncerText ();
+
         countdownStage.addActor ( new TransparentBackground () );
-        countdownStage.addActor ( new AnnouncerText () );
+        countdownStage.addActor ( announcerText );
 
         gameCamera = new OrthographicCamera ();
         gameCamera.setToOrtho ( false, gamePreferences.getWidthResolution (), gamePreferences.getHeightResolution () );
@@ -140,7 +143,11 @@ public class GameScreenWorld
 
     public void update ( float delta )
     {
-        if ( player1.isAlive () && player2.isAlive () ) {
+        if ( announcerText.isAnimationDone () && screenState == GameScreenStateEnum.COUNTDOWN ) {
+            screenState = GameScreenStateEnum.PLAY;
+        }
+
+        if ( player1.isAlive () && player2.isAlive () && screenState != GameScreenStateEnum.COUNTDOWN ) {
             float impulse = player1.getPlayerPhysicsBody ().getMass () * 0.35f;
             if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getLeftKey ( 0 ) ) ) {
                 player1.getPlayerPhysicsBody ().applyLinearImpulse (
@@ -264,6 +271,7 @@ public class GameScreenWorld
         player1.setFuelLength ( 100 );
         player2.setFuelLength ( 100 );
 
+        announcerText.reset ();
         screenState = GameScreenStateEnum.COUNTDOWN;
     }
 
