@@ -105,6 +105,11 @@ public class GenericPlayer extends Actor
         } else if ( fuelLength <= 0 ) {
             canFly = false;
         }
+
+        if ( x < -height ) {
+            kill ();
+            setPlayerState ( PlayerStateEnum.FALLING );
+        }
     }
 
     public Body getPlayerPhysicsBody ()

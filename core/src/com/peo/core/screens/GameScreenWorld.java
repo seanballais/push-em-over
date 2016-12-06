@@ -1,7 +1,7 @@
 package com.peo.core.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
@@ -26,7 +26,9 @@ public class GameScreenWorld
     private GamePreferences gamePreferences;
     private World physicsWorld;
     private Stage playStage;
+    private Stage resultStage;
     private OrthographicCamera gameCamera;
+    private Music levelMusic;
 
     public GameScreenWorld ()
     {
@@ -100,6 +102,11 @@ public class GameScreenWorld
 
             }
         });
+
+        levelMusic = Gdx.audio.newMusic ( Gdx.files.internal ( "audio/bg-music-2.mp3" ) );
+        levelMusic.setLooping ( true );
+        levelMusic.setVolume ( 0.35f );
+        levelMusic.play ();
     }
 
     public void update ( float delta )
@@ -194,6 +201,4 @@ public class GameScreenWorld
     {
         return playStage;
     }
-    public World getPhysicsWorld () { return physicsWorld; }
-    public Camera getGameCamera () { return gameCamera; }
 }
