@@ -76,10 +76,10 @@ public class GameScreenWorld
         resultStage.addActor ( new Title () );
         resultStage.addActor ( new PlayAgainText () );
         resultStage.addActor(
-            new WinnerText ( new Texture ( Gdx.files.internal ( "img/actors/joe-wins.png" ) ), player1 )
+            new WinnerText ( new Texture ( Gdx.files.internal ( "img/actors/bob-wins.png" ) ), player1 )
         );
         resultStage.addActor(
-            new WinnerText ( new Texture ( Gdx.files.internal ( "img/actors/bob-wins.png" ) ), player2 )
+            new WinnerText ( new Texture ( Gdx.files.internal ( "img/actors/joe-wins.png" ) ), player2 )
         );
 
         gameCamera = new OrthographicCamera ();
@@ -256,6 +256,8 @@ public class GameScreenWorld
                 ( float ) ( gamePreferences.getHeightResolution () - 100 ) / Physics.PPM,
                 player1.getPlayerPhysicsBody ().getAngle ()
         );
+        player1.setFuelLength ( 100 );
+        player2.setFuelLength ( 100 );
 
         screenState = GameScreenStateEnum.PLAY;
     }
