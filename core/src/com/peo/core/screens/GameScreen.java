@@ -13,7 +13,12 @@ public class GameScreen extends AbstractScreen
         super ( game );
 
         gameWorld = new GameScreenWorld ();
-        gameRenderer = new GameScreenRenderer ( gameWorld, gameWorld.getPlayStage (), gameWorld.getResultStage () );
+        gameRenderer = new GameScreenRenderer (
+            gameWorld,
+            gameWorld.getPlayStage (),
+            gameWorld.getResultStage (),
+            gameWorld.getCountdownStage ()
+        );
     }
 
     @Override public void render ( float delta )

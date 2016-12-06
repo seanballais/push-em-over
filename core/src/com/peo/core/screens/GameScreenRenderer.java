@@ -15,14 +15,16 @@ public class GameScreenRenderer
     private Box2DDebugRenderer box2DdebugRenderer;
     private Stage playStage;
     private Stage resultStage;
+    private Stage countdownStage;
 
-    public GameScreenRenderer ( GameScreenWorld gameWorld, Stage playStage, Stage resultStage )
+    public GameScreenRenderer ( GameScreenWorld gameWorld, Stage playStage, Stage resultStage, Stage countdownStage )
     {
         this.gameWorld = gameWorld;
         box2DdebugRenderer = new Box2DDebugRenderer ();
 
         this.playStage = playStage;
         this.resultStage = resultStage;
+        this.countdownStage = countdownStage;
     }
 
     public void render ()
@@ -32,7 +34,11 @@ public class GameScreenRenderer
 
         System.out.println ( "Screen state: " + gameWorld.getScreenState () );
 
-        if ( gameWorld.getScreenState () == GameScreenStateEnum.PLAY ) {
+        if ( gameWorld.getScreenState () == GameScreenStateEnum.COUNTDOWN ) {
+            playStage.draw ();
+            countdownStage.act ();
+            countdownStage.draw ();
+        } else if ( gameWorld.getScreenState () == GameScreenStateEnum.PLAY ) {
             playStage.act ();
             playStage.draw ();
         } else if ( gameWorld.getScreenState () == GameScreenStateEnum.RESULT ) {

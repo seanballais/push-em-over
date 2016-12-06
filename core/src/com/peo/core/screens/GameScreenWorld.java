@@ -22,16 +22,17 @@ public class GameScreenWorld
     private Background background;
     private GenericPlayer player1;
     private GenericPlayer player2;
-    private TransparentBackground resultBackground;
     private PlatformManager platformManager;
     private TrapManager trapManager;
     private GamePreferences gamePreferences;
     private World physicsWorld;
     private Stage playStage;
     private Stage resultStage;
+    private Stage countdownStage;
     private OrthographicCamera gameCamera;
     private Music levelMusic;
     private GameScreenStateEnum screenState;
+    private float deltaTime;
     private int p1XPos;
     private int p2XPos;
 
@@ -39,10 +40,11 @@ public class GameScreenWorld
     {
         gamePreferences = new GamePreferences();
 
-        screenState = GameScreenStateEnum.PLAY;
+        screenState = GameScreenStateEnum.COUNTDOWN;
 
         playStage = new Stage ();
         resultStage = new Stage ();
+        countdownStage = new Stage ();
         physicsWorld = new World ( new Vector2 ( 0f, -20f ), true );
 
         background = new Background ();
@@ -70,9 +72,7 @@ public class GameScreenWorld
         trapManager = new TrapManager ( physicsWorld );
         trapManager.setTraps ( playStage );
 
-        resultBackground = new TransparentBackground ();
-
-        resultStage.addActor ( resultBackground );
+        resultStage.addActor ( new TransparentBackground () );
         resultStage.addActor ( new Title () );
         resultStage.addActor ( new PlayAgainText () );
         resultStage.addActor(
@@ -82,8 +82,13 @@ public class GameScreenWorld
             new WinnerText ( new Texture ( Gdx.files.internal ( "img/actors/joe-wins.png" ) ), player2 )
         );
 
+        countdownStage.addActor ( new TransparentBackground () );
+        countdownStage.addActor ( new AnnouncerText () );
+
         gameCamera = new OrthographicCamera ();
         gameCamera.setToOrtho ( false, gamePreferences.getWidthResolution (), gamePreferences.getHeightResolution () );
+
+        deltaTime = 3500f;
 
         physicsWorld.setContactListener ( new ContactListener () {
             @Override
@@ -259,7 +264,7 @@ public class GameScreenWorld
         player1.setFuelLength ( 100 );
         player2.setFuelLength ( 100 );
 
-        screenState = GameScreenStateEnum.PLAY;
+        screenState = GameScreenStateEnum.COUNTDOWN;
     }
 
     public Stage getPlayStage ()
@@ -267,5 +272,6 @@ public class GameScreenWorld
         return playStage;
     }
     public Stage getResultStage () { return  resultStage; }
+    public Stage getCountdownStage () { return countdownStage; }
     public GameScreenStateEnum getScreenState () { return screenState; }
 }

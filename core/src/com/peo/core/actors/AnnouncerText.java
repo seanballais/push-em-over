@@ -13,7 +13,7 @@ public class AnnouncerText extends Actor
     private GamePreferences gamePreferences;
     private TextureRegion [] frames;
     private int frameNum;
-    private int timeDelta;
+    private float timeDelta;
 
     public AnnouncerText ()
     {
@@ -21,7 +21,7 @@ public class AnnouncerText extends Actor
         gamePreferences = new GamePreferences ();
         frames = new TextureRegion [ 3 ];
         frameNum = 0;
-        timeDelta = 0;
+        timeDelta = 1250f;
 
         for ( int frameCount = 0; frameCount < frames.length; frameCount++ ) {
             frames [ frameCount ] = new TextureRegion (
@@ -32,12 +32,12 @@ public class AnnouncerText extends Actor
 
     @Override public void draw ( Batch batch, float parentAlpha )
     {
-        if ( timeDelta == 1000 ) {
-            timeDelta = 0;
-            frameNum += 1;
+        if ( timeDelta <= 0 ) {
+            timeDelta = 1250f;
+            frameNum = Math.min ( frameNum + 1, 2 );
+        } else {
+            timeDelta -= Gdx.graphics.getDeltaTime ();
         }
-
-        timeDelta++;
 
         batch.draw (
             frames [ frameNum ],
