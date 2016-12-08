@@ -200,7 +200,9 @@ public class GameScreenWorld
                 );
             }
 
-            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getRightKey ( 0 ) ) ) {
+            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getRightKey ( 0 ) ) ||
+                 controller.getButton ( 1 ) ||
+                 controller.getAxis ( 0 ) >= 1.0f ) {
                 player1.getPlayerPhysicsBody ().applyLinearImpulse (
                         new Vector2 ( impulse, 0 ),
                         player1.getPlayerPhysicsBody ().getWorldCenter (),
@@ -216,7 +218,9 @@ public class GameScreenWorld
                 );
             }
 
-            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getJumpKey ( 0 ) ) ) {
+            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getJumpKey ( 0 ) ) /*||
+                 controller.getButton ( 0 ) ||
+                 controller.getAxis ( 1 ) <= -1.0f*/ ) {
                 if ( player1.getFuelLength () < 100 && !player1.isCanFly () ) {
                     player1.setFuelLength ( Math.min ( player1.getFuelLength () + 1, 100 ) );
                 } else if ( player1.isCanFly () ) {
@@ -244,7 +248,9 @@ public class GameScreenWorld
                 }
             }
 
-            if ( !Gdx.input.isKeyPressed ( GamePreferences.getInstance ().getJumpKey ( 0 ) ) ) {
+            if ( !Gdx.input.isKeyPressed ( GamePreferences.getInstance ().getJumpKey ( 0 ) ) /* ||
+                 !controller.getButton ( 0 ) ||
+                 controller.getAxis ( 1 ) > 0f */) {
                 if ( player1.getFuelLength () < 100 ) {
                     player1.setFuelLength ( Math.min ( player1.getFuelLength () + 1, 100 ) );
                 }
