@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,7 +14,6 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.peo.Game;
 import com.peo.core.actors.*;
 import com.peo.core.managers.PlatformManager;
 import com.peo.core.managers.TrapManager;
@@ -45,6 +43,7 @@ public class GameScreenWorld
     private float deltaTime;
     private int p1XPos;
     private int p2XPos;
+    private boolean exitDialogShowing;
     private Controller controller;
 
     public GameScreenWorld ()
@@ -57,6 +56,7 @@ public class GameScreenWorld
         resultStage = new Stage ();
         countdownStage = new Stage ();
         physicsWorld = new World ( new Vector2 ( 0f, -10f ), true );
+        exitDialogShowing = false;
 
         for ( Controller c : Controllers.getControllers () ) {
             controller = c;
@@ -108,7 +108,7 @@ public class GameScreenWorld
         deltaTime = 3500f;
 
         exitDialog = new Dialog (
-            "Confirm exit",
+            "Confirm Exit...",
             new Skin (
                 Gdx.files.internal ( "skins/x2/uiskin.json" ),
                 new TextureAtlas ( Gdx.files.internal ( "skins/x2/uiskin.atlas" ) )
@@ -118,6 +118,13 @@ public class GameScreenWorld
                 if ( ( Boolean ) object ) {
                     Gdx.app.exit ();
                 }
+
+                exitDialogShowing = false;
+            }
+
+            @Override
+            public float getPrefHeight() {
+                return 550f;
             }
         }.text ( "Are you sure you want to exit?" )
          .button ( "Exit", true )
@@ -320,7 +327,9 @@ public class GameScreenWorld
             reset ();
         }
 
-        if ( Gdx.input.isKeyPressed ( Input.Keys.ESCAPE ) ) {
+        if ( Gdx.input.isKeyPressed ( Input.Keys.ESCAPE ) && !exitDialogShowing ) {
+            exitDialogShowing = true;
+            Gdx.input.setInputProcessor ( exitStage );
             exitDialog.show ( exitStage );
         }
     }

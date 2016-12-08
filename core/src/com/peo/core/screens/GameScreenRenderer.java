@@ -32,8 +32,6 @@ public class GameScreenRenderer
         Gdx.gl.glClearColor ( 0, 0, 0, 1 );
         Gdx.gl.glClear ( GL20.GL_COLOR_BUFFER_BIT );
 
-        System.out.println ( "Screen state: " + gameWorld.getScreenState () );
-
         if ( gameWorld.getScreenState () == GameScreenStateEnum.COUNTDOWN ) {
             playStage.draw ();
             countdownStage.act ();
