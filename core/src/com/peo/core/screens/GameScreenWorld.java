@@ -182,9 +182,46 @@ public class GameScreenWorld
 
         if ( player1.isAlive () && player2.isAlive () && screenState != GameScreenStateEnum.COUNTDOWN ) {
             float impulse = player1.getPlayerPhysicsBody ().getMass () * 0.30f;
-            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getLeftKey ( 0 ) ) ||
-                 controller.getButton ( 3 ) ||
-                 controller.getAxis ( 0 ) <= -1.0f ) {
+
+            if ( controller != null ) {
+                if ( controller.getAxis ( 0 ) <= -1.0f ) {
+                    player1.getPlayerPhysicsBody ().applyLinearImpulse (
+                            new Vector2 ( -impulse, 0 ),
+                            player1.getPlayerPhysicsBody ().getWorldCenter (),
+                            true
+                    );
+                }
+
+                if ( controller.getAxis ( 0 ) >= 1.0f ) {
+                    player1.getPlayerPhysicsBody ().applyLinearImpulse (
+                            new Vector2 ( impulse, 0 ),
+                            player1.getPlayerPhysicsBody ().getWorldCenter (),
+                            true
+                    );
+                }
+
+                if ( controller.getButton ( 0 ) ) {
+                    if ( player1.getFuelLength () < 100 && !player1.isCanFly () ) {
+                        player1.setFuelLength ( Math.min ( player1.getFuelLength () + 1, 100 ) );
+                    } else if ( player1.isCanFly () ) {
+                        player1.getPlayerPhysicsBody().applyLinearImpulse(
+                                new Vector2(0, impulse * 2),
+                                player1.getPlayerPhysicsBody().getWorldCenter(),
+                                true
+                        );
+
+                        player1.setFuelLength ( Math.max ( player1.getFuelLength () - 2, 0 ) );
+                    }
+                } else {
+                    if ( player1.getFuelLength () < 100 ) {
+                        player1.setFuelLength ( Math.min ( player1.getFuelLength () + 1, 100 ) );
+                    }
+                }
+
+
+            }
+
+            if ( controller == null && Gdx.input.isKeyPressed ( GamePreferences.getInstance().getLeftKey ( 0 ) ) ) {
                 player1.getPlayerPhysicsBody ().applyLinearImpulse (
                         new Vector2 ( -impulse, 0 ),
                         player1.getPlayerPhysicsBody ().getWorldCenter (),
@@ -200,9 +237,7 @@ public class GameScreenWorld
                 );
             }
 
-            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getRightKey ( 0 ) ) ||
-                 controller.getButton ( 1 ) ||
-                 controller.getAxis ( 0 ) >= 1.0f ) {
+            if ( controller == null && Gdx.input.isKeyPressed ( GamePreferences.getInstance().getRightKey ( 0 ) ) ) {
                 player1.getPlayerPhysicsBody ().applyLinearImpulse (
                         new Vector2 ( impulse, 0 ),
                         player1.getPlayerPhysicsBody ().getWorldCenter (),
@@ -218,9 +253,7 @@ public class GameScreenWorld
                 );
             }
 
-            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getJumpKey ( 0 ) ) /*||
-                 controller.getButton ( 0 ) ||
-                 controller.getAxis ( 1 ) <= -1.0f*/ ) {
+            if ( controller == null && Gdx.input.isKeyPressed ( GamePreferences.getInstance().getJumpKey ( 0 ) ) ) {
                 if ( player1.getFuelLength () < 100 && !player1.isCanFly () ) {
                     player1.setFuelLength ( Math.min ( player1.getFuelLength () + 1, 100 ) );
                 } else if ( player1.isCanFly () ) {
@@ -248,9 +281,7 @@ public class GameScreenWorld
                 }
             }
 
-            if ( !Gdx.input.isKeyPressed ( GamePreferences.getInstance ().getJumpKey ( 0 ) ) /* ||
-                 !controller.getButton ( 0 ) ||
-                 controller.getAxis ( 1 ) > 0f */) {
+            if ( controller == null && !Gdx.input.isKeyPressed ( GamePreferences.getInstance ().getJumpKey ( 0 ) ) ) {
                 if ( player1.getFuelLength () < 100 ) {
                     player1.setFuelLength ( Math.min ( player1.getFuelLength () + 1, 100 ) );
                 }
