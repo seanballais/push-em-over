@@ -323,8 +323,7 @@ public class GameScreenWorld
             reset ();
         }
 
-        if ( Gdx.input.isKeyPressed ( Input.Keys.ESCAPE ) && !exitDialogShowing ) {
-            exitDialogShowing = true;
+        if ( Gdx.input.isKeyPressed ( Input.Keys.ESCAPE ) ) {
             Gdx.input.setInputProcessor ( exitStage );
             exitDialog.show ( exitStage );
         }
