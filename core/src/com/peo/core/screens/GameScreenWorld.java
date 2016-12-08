@@ -118,8 +118,6 @@ public class GameScreenWorld
                 if ( ( Boolean ) object ) {
                     Gdx.app.exit ();
                 }
-
-                exitDialogShowing = false;
             }
 
             @Override
@@ -128,9 +126,7 @@ public class GameScreenWorld
             }
         }.text ( "Are you sure you want to exit?" )
          .button ( "Exit", true )
-         .button ( "Cancel", false )
-         .key ( Input.Keys.ENTER, true )
-         .key ( Input.Keys.ESCAPE, false );
+         .button ( "Cancel", false );
         exitStage = new Stage ();
 
         physicsWorld.setContactListener ( new ContactListener () {
