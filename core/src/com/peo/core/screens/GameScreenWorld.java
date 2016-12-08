@@ -46,7 +46,7 @@ public class GameScreenWorld
         playStage = new Stage ();
         resultStage = new Stage ();
         countdownStage = new Stage ();
-        physicsWorld = new World ( new Vector2 ( 0f, -20f ), true );
+        physicsWorld = new World ( new Vector2 ( 0f, -10f ), true );
 
         background = new Background ();
         playStage.addActor ( background );
@@ -148,7 +148,7 @@ public class GameScreenWorld
         }
 
         if ( player1.isAlive () && player2.isAlive () && screenState != GameScreenStateEnum.COUNTDOWN ) {
-            float impulse = player1.getPlayerPhysicsBody ().getMass () * 0.35f;
+            float impulse = player1.getPlayerPhysicsBody ().getMass () * 0.30f;
             if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getLeftKey ( 0 ) ) ) {
                 player1.getPlayerPhysicsBody ().applyLinearImpulse (
                         new Vector2 ( -impulse, 0 ),
@@ -268,8 +268,12 @@ public class GameScreenWorld
                 ( float ) ( gamePreferences.getHeightResolution () - 100 ) / Physics.PPM,
                 player1.getPlayerPhysicsBody ().getAngle ()
         );
+        player1.setYPos ( Math.round ( player1.getPlayerPhysicsBody ().getPosition ().y ) );
+        player2.setYPos ( Math.round ( player2.getPlayerPhysicsBody ().getPosition ().y ) );
         player1.setFuelLength ( 100 );
         player2.setFuelLength ( 100 );
+        player1.getPlayerPhysicsBody ().setLinearVelocity ( 0f, 1f );
+        player2.getPlayerPhysicsBody ().setLinearVelocity ( 0f, 1f );
 
         announcerText.reset ();
         screenState = GameScreenStateEnum.COUNTDOWN;
