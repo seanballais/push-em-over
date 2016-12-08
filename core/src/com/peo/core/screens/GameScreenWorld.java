@@ -3,12 +3,19 @@ package com.peo.core.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.ControllerAdapter;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.peo.Game;
 import com.peo.core.actors.*;
 import com.peo.core.managers.PlatformManager;
 import com.peo.core.managers.TrapManager;
@@ -29,13 +36,16 @@ public class GameScreenWorld
     private Stage playStage;
     private Stage resultStage;
     private Stage countdownStage;
+    private Stage exitStage;
     private OrthographicCamera gameCamera;
     private Music levelMusic;
     private GameScreenStateEnum screenState;
     private AnnouncerText announcerText;
+    private Dialog exitDialog;
     private float deltaTime;
     private int p1XPos;
     private int p2XPos;
+    private Controller controller;
 
     public GameScreenWorld ()
     {
@@ -47,6 +57,10 @@ public class GameScreenWorld
         resultStage = new Stage ();
         countdownStage = new Stage ();
         physicsWorld = new World ( new Vector2 ( 0f, -10f ), true );
+
+        for ( Controller c : Controllers.getControllers () ) {
+            controller = c;
+        }
 
         background = new Background ();
         playStage.addActor ( background );
@@ -92,6 +106,25 @@ public class GameScreenWorld
         gameCamera.setToOrtho ( false, gamePreferences.getWidthResolution (), gamePreferences.getHeightResolution () );
 
         deltaTime = 3500f;
+
+        exitDialog = new Dialog (
+            "Confirm exit",
+            new Skin (
+                Gdx.files.internal ( "skins/x2/uiskin.json" ),
+                new TextureAtlas ( Gdx.files.internal ( "skins/x2/uiskin.atlas" ) )
+            )
+        ) {
+            @Override protected void result ( Object object ) {
+                if ( ( Boolean ) object ) {
+                    Gdx.app.exit ();
+                }
+            }
+        }.text ( "Are you sure you want to exit?" )
+         .button ( "Exit", true )
+         .button ( "Cancel", false )
+         .key ( Input.Keys.ENTER, true )
+         .key ( Input.Keys.ESCAPE, false );
+        exitStage = new Stage ();
 
         physicsWorld.setContactListener ( new ContactListener () {
             @Override
@@ -149,7 +182,9 @@ public class GameScreenWorld
 
         if ( player1.isAlive () && player2.isAlive () && screenState != GameScreenStateEnum.COUNTDOWN ) {
             float impulse = player1.getPlayerPhysicsBody ().getMass () * 0.30f;
-            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getLeftKey ( 0 ) ) ) {
+            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getLeftKey ( 0 ) ) ||
+                 controller.getButton ( 3 ) ||
+                 controller.getAxis ( 0 ) <= -1.0f ) {
                 player1.getPlayerPhysicsBody ().applyLinearImpulse (
                         new Vector2 ( -impulse, 0 ),
                         player1.getPlayerPhysicsBody ().getWorldCenter (),
@@ -247,6 +282,10 @@ public class GameScreenWorld
         if ( Gdx.input.isKeyPressed ( Input.Keys.ENTER ) && screenState == GameScreenStateEnum.RESULT ) {
             reset ();
         }
+
+        if ( Gdx.input.isKeyPressed ( Input.Keys.ESCAPE ) ) {
+            exitDialog.show ( exitStage );
+        }
     }
 
     private void reset ()
@@ -285,5 +324,6 @@ public class GameScreenWorld
     }
     public Stage getResultStage () { return  resultStage; }
     public Stage getCountdownStage () { return countdownStage; }
+    public Stage getExitStage () { return exitStage; }
     public GameScreenStateEnum getScreenState () { return screenState; }
 }

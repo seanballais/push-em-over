@@ -46,6 +46,9 @@ public class GameScreenRenderer
             resultStage.act ();
             resultStage.draw ();
         }
+
+        gameWorld.getExitStage ().act ();
+        gameWorld.getExitStage ().draw ();
     }
 
     public void dispose ()
