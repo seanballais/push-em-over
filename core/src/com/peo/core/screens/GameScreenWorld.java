@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
@@ -56,6 +57,7 @@ public class GameScreenWorld
     private Controller controller;
     private final Game game;
     private Scoreboard scoreboard;
+    private Sound splatSound;
 
     public GameScreenWorld (final Game game )
     {
@@ -76,6 +78,7 @@ public class GameScreenWorld
         player1Hit = false;
         player2Hit = false;
         scoreboard = new Scoreboard ();
+        splatSound = Gdx.audio.newSound ( Gdx.files.internal ( "audio/splat.mp3" ) );
 
         for ( Controller c : Controllers.getControllers () ) {
             controller = c;
@@ -328,11 +331,15 @@ public class GameScreenWorld
             if ( movePlayer1 ) {
                 player1Hit = false;
                 resetPlayer1 ();
+
+                splatSound.play ( 0.6f );
             }
 
             if ( movePlayer2 ) {
                 player2Hit = false;
                 resetPlayer2 ();
+
+                splatSound.play ( 0.6f );
             }
 
             if ( p1Score == 15 || p2Score == 15 ) {
