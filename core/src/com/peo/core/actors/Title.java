@@ -22,7 +22,7 @@ public class Title extends Actor
         batch.draw (
             titleTexture,
             ( gamePreferences.getWidthResolution () / 2 ) - ( titleTexture.getWidth () / 2 ),
-            gamePreferences.getHeightResolution () - ( titleTexture.getHeight () + 10 )
+            gamePreferences.getHeightResolution () - ( titleTexture.getHeight () + 90 )
         );
     }
 }

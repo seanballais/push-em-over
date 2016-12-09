@@ -1,5 +1,6 @@
 package com.peo.core.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
@@ -16,6 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.peo.core.actors.*;
 import com.peo.core.managers.PlatformManager;
+import com.peo.core.managers.ScreenEnum;
+import com.peo.core.managers.ScreenManager;
 import com.peo.core.managers.TrapManager;
 import com.peo.utils.GamePreferences;
 import com.peo.utils.Physics;
@@ -45,9 +48,11 @@ public class GameScreenWorld
     private int p2XPos;
     private boolean exitDialogShowing;
     private Controller controller;
+    private final Game game;
 
-    public GameScreenWorld ()
+    public GameScreenWorld (final Game game )
     {
+        this.game = game;
         gamePreferences = new GamePreferences();
 
         screenState = GameScreenStateEnum.COUNTDOWN;
@@ -116,7 +121,9 @@ public class GameScreenWorld
         ) {
             @Override protected void result ( Object object ) {
                 if ( ( Boolean ) object ) {
-                    Gdx.app.exit ();
+                    ScreenManager.getInstance ().show ( ScreenEnum.MAIN_SCREEN, game );
+                    levelMusic.stop ();
+                    levelMusic.dispose ();
                 }
             }
 
@@ -173,7 +180,7 @@ public class GameScreenWorld
 
         levelMusic = Gdx.audio.newMusic ( Gdx.files.internal ( "audio/bg-music-2.mp3" ) );
         levelMusic.setLooping ( true );
-        levelMusic.setVolume ( 0.35f );
+        levelMusic.setVolume ( 0.45f );
         levelMusic.play ();
     }
 

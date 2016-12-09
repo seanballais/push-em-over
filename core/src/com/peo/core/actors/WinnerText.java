@@ -24,7 +24,7 @@ public class WinnerText extends Actor
             batch.draw (
                     winnerTextTexture,
                     ( gamePreferences.getWidthResolution () / 2 ) - ( winnerTextTexture.getWidth () / 2 ),
-                    ( gamePreferences.getHeightResolution () / 2 ) - ( winnerTextTexture.getHeight () / 2 )
+                    ( gamePreferences.getHeightResolution () / 2 ) - ( winnerTextTexture.getHeight () / 2 ) - 40
             );
         }
     }

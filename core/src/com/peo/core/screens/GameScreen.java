@@ -12,7 +12,7 @@ public class GameScreen extends AbstractScreen
     {
         super ( game );
 
-        gameWorld = new GameScreenWorld ();
+        gameWorld = new GameScreenWorld ( game );
         gameRenderer = new GameScreenRenderer (
             gameWorld,
             gameWorld.getPlayStage (),
