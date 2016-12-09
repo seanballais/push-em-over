@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.peo.core.actors.Background;
+import com.peo.core.actors.MenuImage;
 import com.peo.core.actors.Title;
 import com.peo.core.managers.MainMenuStateEnum;
 import com.peo.core.managers.ScreenEnum;
@@ -26,7 +27,6 @@ public class MainMenuScreen extends AbstractScreen
     private Stage helpStage;
     private Stage creditsStage;
     private Skin skin;
-    private Background background;
     private Title title;
     private Music levelMusic;
     private GamePreferences gamePreferences;
@@ -40,7 +40,6 @@ public class MainMenuScreen extends AbstractScreen
         helpStage = new Stage ();
         creditsStage = new Stage ();
         skin = new Skin ();
-        background = new Background ();
         title = new Title ();
         menuState = MainMenuStateEnum.MENU;
 
@@ -68,14 +67,21 @@ public class MainMenuScreen extends AbstractScreen
 
         final TextButton playButton = new TextButton ( "PLAY", textButtonStyle );
         final TextButton exitButton = new TextButton ( "EXIT", textButtonStyle );
+        final TextButton helpButton = new TextButton ( "HELP", textButtonStyle );
+        final TextButton returnButton = new TextButton ( "BACK", textButtonStyle );
         playButton.setPosition (
             ( gamePreferences.getWidthResolution () / 2 ) - 50,
             gamePreferences.getHeightResolution() / 2
         );
         exitButton.setPosition (
             ( gamePreferences.getWidthResolution () / 2 ) - 50,
+            ( gamePreferences.getHeightResolution() / 2 ) - 140
+        );
+        helpButton.setPosition (
+            ( gamePreferences.getWidthResolution () / 2 ) - 50,
             ( gamePreferences.getHeightResolution() / 2 ) - 70
         );
+        returnButton.setPosition ( ( gamePreferences.getWidthResolution () / 2 ) - 50, 50 );
 
         playButton.addListener( new ChangeListener () {
             @Override public void changed ( ChangeEvent event, Actor actor ) {
@@ -85,29 +91,38 @@ public class MainMenuScreen extends AbstractScreen
             }
         });
 
+        returnButton.addListener( new ChangeListener () {
+            @Override public void changed ( ChangeEvent event, Actor actor ) {
+                menuState = MainMenuStateEnum.MENU;
+            }
+        });
+
+        helpButton.addListener( new ChangeListener () {
+            @Override public void changed ( ChangeEvent event, Actor actor ) {
+                menuState = MainMenuStateEnum.HELP;
+            }
+        });
+
         exitButton.addListener( new ChangeListener () {
             @Override public void changed ( ChangeEvent event, Actor actor ) {
                 Gdx.app.exit ();
             }
         });
 
-        menuStage.addActor ( background );
+        menuStage.addActor ( new Background () );
         menuStage.addActor ( title );
         menuStage.addActor ( playButton );
+        menuStage.addActor ( helpButton );
         menuStage.addActor ( exitButton );
+
+        helpStage.addActor ( new Background () );
+        helpStage.addActor ( new MenuImage ( "img/main-menu/assets/instructions.png" ) );
+        helpStage.addActor ( returnButton );
 
         levelMusic = Gdx.audio.newMusic ( Gdx.files.internal ( "audio/bg-music-3.mp3" ) );
         levelMusic.setLooping ( true );
         levelMusic.setVolume ( 0.35f );
         levelMusic.play ();
-
-        if ( menuState == MainMenuStateEnum.MENU ) {
-            Gdx.input.setInputProcessor ( menuStage );
-        } else if ( menuState == MainMenuStateEnum.CREDITS ) {
-            Gdx.input.setInputProcessor ( creditsStage );
-        } else if ( menuState == MainMenuStateEnum.HELP ) {
-            Gdx.input.setInputProcessor ( helpStage );
-        }
     }
 
     @Override public void render ( float delta )
@@ -115,7 +130,18 @@ public class MainMenuScreen extends AbstractScreen
         Gdx.gl.glClearColor (0.2f, 0.2f, 0.2f, 1 );
         Gdx.gl.glClear ( GL20.GL_COLOR_BUFFER_BIT );
 
-        menuStage.act ();
-        menuStage.draw ();
+        if ( menuState == MainMenuStateEnum.MENU ) {
+            Gdx.input.setInputProcessor ( menuStage );
+
+            menuStage.act ();
+            menuStage.draw ();
+        } else if ( menuState == MainMenuStateEnum.CREDITS ) {
+            Gdx.input.setInputProcessor ( creditsStage );
+        } else if ( menuState == MainMenuStateEnum.HELP ) {
+            Gdx.input.setInputProcessor ( helpStage );
+
+            helpStage.act ();
+            helpStage.draw ();
+        }
     }
 }
