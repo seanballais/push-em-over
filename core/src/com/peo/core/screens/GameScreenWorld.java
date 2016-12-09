@@ -46,9 +46,16 @@ public class GameScreenWorld
     private float deltaTime;
     private int p1XPos;
     private int p2XPos;
+    private int p1Score;
+    private int p2Score;
+    private boolean movePlayer1;
+    private boolean movePlayer2;
     private boolean exitDialogShowing;
+    private boolean player1Hit;
+    private boolean player2Hit;
     private Controller controller;
     private final Game game;
+    private Scoreboard scoreboard;
 
     public GameScreenWorld (final Game game )
     {
@@ -62,6 +69,13 @@ public class GameScreenWorld
         countdownStage = new Stage ();
         physicsWorld = new World ( new Vector2 ( 0f, -10f ), true );
         exitDialogShowing = false;
+        p1Score = 0;
+        p2Score = 0;
+        movePlayer1 = false;
+        movePlayer2 = false;
+        player1Hit = false;
+        player2Hit = false;
+        scoreboard = new Scoreboard ();
 
         for ( Controller c : Controllers.getControllers () ) {
             controller = c;
@@ -91,6 +105,8 @@ public class GameScreenWorld
 
         trapManager = new TrapManager ( physicsWorld );
         trapManager.setTraps ( playStage );
+
+        playStage.addActor ( scoreboard );
 
         resultStage.addActor ( new TransparentBackground () );
         resultStage.addActor ( new Title () );
@@ -144,20 +160,14 @@ public class GameScreenWorld
                             contact.getFixtureB ().getBody () == trap.getTrapPhysicsBody () ) ||
                             ( contact.getFixtureB ().getBody () == player1.getPlayerPhysicsBody () &&
                                 contact.getFixtureA ().getBody () == trap.getTrapPhysicsBody () ) ) {
-                        player1.setPlayerState ( PlayerStateEnum.FALLING );
-                        player1.kill ();
-
-                        screenState = GameScreenStateEnum.RESULT;
+                        player1Hit = true;
                     }
 
                     if ( ( contact.getFixtureA ().getBody () == player2.getPlayerPhysicsBody () &&
                             contact.getFixtureB ().getBody () == trap.getTrapPhysicsBody () ) ||
                             ( contact.getFixtureB ().getBody () == player2.getPlayerPhysicsBody () &&
                                 contact.getFixtureA ().getBody () == trap.getTrapPhysicsBody () ) ) {
-                        player2.setPlayerState ( PlayerStateEnum.FALLING );
-                        player2.kill ();
-
-                        screenState = GameScreenStateEnum.RESULT;
+                        player2Hit = true;
                     }
                 }
             }
@@ -190,7 +200,7 @@ public class GameScreenWorld
             screenState = GameScreenStateEnum.PLAY;
         }
 
-        if ( player1.isAlive () && player2.isAlive () && screenState != GameScreenStateEnum.COUNTDOWN ) {
+        if ( player1.isAlive () && player2.isAlive () && screenState != GameScreenStateEnum.COUNTDOWN && screenState != GameScreenStateEnum.RESULT ) {
             float impulse = player1.getPlayerPhysicsBody ().getMass () * 0.30f;
 
             if ( controller != null ) {
@@ -227,8 +237,6 @@ public class GameScreenWorld
                         player1.setFuelLength ( Math.min ( player1.getFuelLength () + 1, 100 ) );
                     }
                 }
-
-
             }
 
             if ( controller == null && Gdx.input.isKeyPressed ( GamePreferences.getInstance().getLeftKey ( 0 ) ) ) {
@@ -303,16 +311,42 @@ public class GameScreenWorld
                 }
             }
 
-            if ( player1.getYPos () < -90 ) {
+            if ( player1.getYPos () < -90 || player1Hit ) {
                 player1.kill ();
-
-                screenState = GameScreenStateEnum.RESULT;
+                p2Score++;
+                scoreboard.setPlayer2 ( p2Score );
+                movePlayer1 = true;
             }
 
-            if ( player2.getYPos () < -90 ) {
+            if ( player2.getYPos () < -90 || player2Hit ) {
                 player2.kill ();
+                p1Score++;
+                scoreboard.setPlayer1 ( p1Score );
+                movePlayer2 = true;
+            }
+
+            if ( movePlayer1 ) {
+                player1Hit = false;
+                resetPlayer1 ();
+            }
+
+            if ( movePlayer2 ) {
+                player2Hit = false;
+                resetPlayer2 ();
+            }
+
+            if ( p1Score == 15 || p2Score == 15 ) {
+                if ( p1Score > p2Score ) {
+                    player2.kill ();
+                } else if ( p1Score < p2Score ) {
+                    player1.kill ();
+                }
 
                 screenState = GameScreenStateEnum.RESULT;
+                p1Score = 0;
+                p2Score = 0;
+                scoreboard.setPlayer1 ( 0 );
+                scoreboard.setPlayer2 ( 0 );
             }
 
             physicsWorld.step ( Gdx.graphics.getDeltaTime (), 6, 2 );
@@ -327,6 +361,8 @@ public class GameScreenWorld
         gameCamera.update ();
 
         if ( Gdx.input.isKeyPressed ( Input.Keys.ENTER ) && screenState == GameScreenStateEnum.RESULT ) {
+            resetPlayer1 ();
+            resetPlayer2 ();
             reset ();
         }
 
@@ -336,32 +372,41 @@ public class GameScreenWorld
         }
     }
 
-    private void reset ()
+    private void resetPlayer1 ()
     {
         int x1Pos = new Random().nextInt ( 10 ) * ( gamePreferences.getWidthResolution () / 10 );
-        int x2Pos = new Random().nextInt ( 10 ) * ( gamePreferences.getWidthResolution () / 10 );
 
         player1.resurrect ();
-        player2.resurrect ();
         player1.setPlayerState ( PlayerStateEnum.WALKING );
-        player2.setPlayerState ( PlayerStateEnum.WALKING );
         player1.getPlayerPhysicsBody ().setTransform (
-            ( float ) x1Pos / Physics.PPM,
-            ( float ) ( gamePreferences.getHeightResolution () - 100 ) / Physics.PPM,
-            player1.getPlayerPhysicsBody ().getAngle ()
+                ( float ) x1Pos / Physics.PPM,
+                ( float ) ( gamePreferences.getHeightResolution () - 100 ) / Physics.PPM,
+                player1.getPlayerPhysicsBody ().getAngle ()
         );
+        player1.setYPos ( Math.round ( player1.getPlayerPhysicsBody ().getPosition ().y ) );
+        player1.setFuelLength ( 100 );
+        player1.getPlayerPhysicsBody ().setLinearVelocity ( 0f, 1f );
+        movePlayer1 = false;
+    }
+
+    private void resetPlayer2 ()
+    {
+        int x2Pos = new Random().nextInt ( 10 ) * ( gamePreferences.getWidthResolution () / 10 );
+        player2.resurrect ();
+        player2.setPlayerState ( PlayerStateEnum.WALKING );
         player2.getPlayerPhysicsBody ().setTransform (
                 ( float ) x2Pos / Physics.PPM,
                 ( float ) ( gamePreferences.getHeightResolution () - 100 ) / Physics.PPM,
                 player1.getPlayerPhysicsBody ().getAngle ()
         );
-        player1.setYPos ( Math.round ( player1.getPlayerPhysicsBody ().getPosition ().y ) );
         player2.setYPos ( Math.round ( player2.getPlayerPhysicsBody ().getPosition ().y ) );
-        player1.setFuelLength ( 100 );
         player2.setFuelLength ( 100 );
-        player1.getPlayerPhysicsBody ().setLinearVelocity ( 0f, 1f );
         player2.getPlayerPhysicsBody ().setLinearVelocity ( 0f, 1f );
+        movePlayer2 = false;
+    }
 
+    private void reset ()
+    {
         announcerText.reset ();
         screenState = GameScreenStateEnum.COUNTDOWN;
     }

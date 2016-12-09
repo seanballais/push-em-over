@@ -31,11 +31,13 @@ public class MainMenuScreen extends AbstractScreen
     private Music levelMusic;
     private GamePreferences gamePreferences;
     private MainMenuStateEnum menuState;
+    private boolean movedScreen;
 
     public MainMenuScreen (final Game game )
     {
         super ( game );
 
+        movedScreen = false;
         menuStage = new Stage ();
         helpStage = new Stage ();
         creditsStage = new Stage ();
@@ -92,9 +94,12 @@ public class MainMenuScreen extends AbstractScreen
 
         playButton.addListener( new ChangeListener () {
             @Override public void changed ( ChangeEvent event, Actor actor ) {
-            ScreenManager.getInstance ().show ( ScreenEnum.GAME_SCREEN, game );
-            levelMusic.stop ();
-            levelMusic.dispose ();
+            if ( !movedScreen ) {
+                ScreenManager.getInstance ().show ( ScreenEnum.GAME_SCREEN, game );
+                levelMusic.stop ();
+                levelMusic.dispose ();
+                movedScreen = true;
+            }
             }
         });
 
@@ -124,7 +129,10 @@ public class MainMenuScreen extends AbstractScreen
 
         exitButton.addListener( new ChangeListener () {
             @Override public void changed ( ChangeEvent event, Actor actor ) {
-                Gdx.app.exit ();
+                if ( !movedScreen ) {
+                    Gdx.app.exit();
+                    movedScreen = true;
+                }
             }
         });
 
