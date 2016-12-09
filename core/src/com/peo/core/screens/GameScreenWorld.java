@@ -58,6 +58,7 @@ public class GameScreenWorld
     private final Game game;
     private Scoreboard scoreboard;
     private Sound splatSound;
+    private Sound hurraySound;
 
     public GameScreenWorld (final Game game )
     {
@@ -79,6 +80,7 @@ public class GameScreenWorld
         player2Hit = false;
         scoreboard = new Scoreboard ();
         splatSound = Gdx.audio.newSound ( Gdx.files.internal ( "audio/splat.mp3" ) );
+        hurraySound = Gdx.audio.newSound ( Gdx.files.internal ( "audio/hurray.mp3" ) );
 
         for ( Controller c : Controllers.getControllers () ) {
             controller = c;
@@ -332,14 +334,14 @@ public class GameScreenWorld
                 player1Hit = false;
                 resetPlayer1 ();
 
-                splatSound.play ( 0.6f );
+                splatSound.play ( 0.7f );
             }
 
             if ( movePlayer2 ) {
                 player2Hit = false;
                 resetPlayer2 ();
 
-                splatSound.play ( 0.6f );
+                splatSound.play ( 0.7f );
             }
 
             if ( p1Score == 15 || p2Score == 15 ) {
@@ -350,10 +352,7 @@ public class GameScreenWorld
                 }
 
                 screenState = GameScreenStateEnum.RESULT;
-                p1Score = 0;
-                p2Score = 0;
-                scoreboard.setPlayer1 ( 0 );
-                scoreboard.setPlayer2 ( 0 );
+                hurraySound.play ( 0.8f );
             }
 
             physicsWorld.step ( Gdx.graphics.getDeltaTime (), 6, 2 );
@@ -371,6 +370,10 @@ public class GameScreenWorld
             resetPlayer1 ();
             resetPlayer2 ();
             reset ();
+            scoreboard.setPlayer1 ( 0 );
+            scoreboard.setPlayer2 ( 0 );
+            p1Score = 0;
+            p2Score = 0;
         }
 
         if ( Gdx.input.isKeyPressed ( Input.Keys.ESCAPE ) ) {
@@ -387,7 +390,7 @@ public class GameScreenWorld
         player1.setPlayerState ( PlayerStateEnum.WALKING );
         player1.getPlayerPhysicsBody ().setTransform (
                 ( float ) x1Pos / Physics.PPM,
-                ( float ) ( gamePreferences.getHeightResolution () - 100 ) / Physics.PPM,
+                ( float ) gamePreferences.getHeightResolution () / Physics.PPM,
                 player1.getPlayerPhysicsBody ().getAngle ()
         );
         player1.setYPos ( Math.round ( player1.getPlayerPhysicsBody ().getPosition ().y ) );
@@ -403,7 +406,7 @@ public class GameScreenWorld
         player2.setPlayerState ( PlayerStateEnum.WALKING );
         player2.getPlayerPhysicsBody ().setTransform (
                 ( float ) x2Pos / Physics.PPM,
-                ( float ) ( gamePreferences.getHeightResolution () - 100 ) / Physics.PPM,
+                ( float ) gamePreferences.getHeightResolution () / Physics.PPM,
                 player1.getPlayerPhysicsBody ().getAngle ()
         );
         player2.setYPos ( Math.round ( player2.getPlayerPhysicsBody ().getPosition ().y ) );
