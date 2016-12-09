@@ -180,7 +180,7 @@ public class GameScreenWorld
 
         levelMusic = Gdx.audio.newMusic ( Gdx.files.internal ( "audio/bg-music-2.mp3" ) );
         levelMusic.setLooping ( true );
-        levelMusic.setVolume ( 0.45f );
+        levelMusic.setVolume ( 0.5f );
         levelMusic.play ();
     }
 

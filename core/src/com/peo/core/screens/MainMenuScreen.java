@@ -68,6 +68,7 @@ public class MainMenuScreen extends AbstractScreen
         final TextButton playButton = new TextButton ( "PLAY", textButtonStyle );
         final TextButton exitButton = new TextButton ( "EXIT", textButtonStyle );
         final TextButton helpButton = new TextButton ( "HELP", textButtonStyle );
+        final TextButton creditButton = new TextButton ( "CREDIT", textButtonStyle );
         final TextButton returnButton = new TextButton ( "BACK", textButtonStyle );
         playButton.setPosition (
             ( gamePreferences.getWidthResolution () / 2 ) - 50,
@@ -75,13 +76,17 @@ public class MainMenuScreen extends AbstractScreen
         );
         exitButton.setPosition (
             ( gamePreferences.getWidthResolution () / 2 ) - 50,
-            ( gamePreferences.getHeightResolution() / 2 ) - 140
+            ( gamePreferences.getHeightResolution() / 2 ) - 210
         );
         helpButton.setPosition (
             ( gamePreferences.getWidthResolution () / 2 ) - 50,
             ( gamePreferences.getHeightResolution() / 2 ) - 70
         );
-        returnButton.setPosition ( ( gamePreferences.getWidthResolution () / 2 ) - 50, 50 );
+        creditButton.setPosition (
+            ( gamePreferences.getWidthResolution () / 2 ) - 50,
+            ( gamePreferences.getHeightResolution() / 2 ) - 140
+        );
+        returnButton.setPosition ( ( gamePreferences.getWidthResolution () / 2 ) - 50, 100 );
 
         playButton.addListener( new ChangeListener () {
             @Override public void changed ( ChangeEvent event, Actor actor ) {
@@ -94,6 +99,12 @@ public class MainMenuScreen extends AbstractScreen
         returnButton.addListener( new ChangeListener () {
             @Override public void changed ( ChangeEvent event, Actor actor ) {
                 menuState = MainMenuStateEnum.MENU;
+            }
+        });
+
+        creditButton.addListener( new ChangeListener () {
+            @Override public void changed ( ChangeEvent event, Actor actor ) {
+                menuState = MainMenuStateEnum.CREDITS;
             }
         });
 
@@ -113,15 +124,20 @@ public class MainMenuScreen extends AbstractScreen
         menuStage.addActor ( title );
         menuStage.addActor ( playButton );
         menuStage.addActor ( helpButton );
+        menuStage.addActor ( creditButton );
         menuStage.addActor ( exitButton );
 
         helpStage.addActor ( new Background () );
         helpStage.addActor ( new MenuImage ( "img/main-menu/assets/instructions.png" ) );
         helpStage.addActor ( returnButton );
 
+        creditsStage.addActor ( new Background () );
+        creditsStage.addActor ( new MenuImage ( "img/main-menu/assets/credits.png" ) );
+        creditsStage.addActor ( returnButton );
+
         levelMusic = Gdx.audio.newMusic ( Gdx.files.internal ( "audio/bg-music-3.mp3" ) );
         levelMusic.setLooping ( true );
-        levelMusic.setVolume ( 0.35f );
+        levelMusic.setVolume ( 0.5f );
         levelMusic.play ();
     }
 
@@ -137,6 +153,9 @@ public class MainMenuScreen extends AbstractScreen
             menuStage.draw ();
         } else if ( menuState == MainMenuStateEnum.CREDITS ) {
             Gdx.input.setInputProcessor ( creditsStage );
+
+            creditsStage.act ();
+            creditsStage.draw ();
         } else if ( menuState == MainMenuStateEnum.HELP ) {
             Gdx.input.setInputProcessor ( helpStage );
 
