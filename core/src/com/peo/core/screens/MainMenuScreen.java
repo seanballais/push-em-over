@@ -70,6 +70,7 @@ public class MainMenuScreen extends AbstractScreen
         final TextButton helpButton = new TextButton ( "HELP", textButtonStyle );
         final TextButton creditButton = new TextButton ( "CREDIT", textButtonStyle );
         final TextButton returnButton = new TextButton ( "BACK", textButtonStyle );
+        final TextButton returnCreditButton = new TextButton ( "BACK", textButtonStyle );
         playButton.setPosition (
             ( gamePreferences.getWidthResolution () / 2 ) - 50,
             gamePreferences.getHeightResolution() / 2
@@ -86,7 +87,8 @@ public class MainMenuScreen extends AbstractScreen
             ( gamePreferences.getWidthResolution () / 2 ) - 50,
             ( gamePreferences.getHeightResolution() / 2 ) - 140
         );
-        returnButton.setPosition ( ( gamePreferences.getWidthResolution () / 2 ) - 50, 100 );
+        returnButton.setPosition ( ( gamePreferences.getWidthResolution () / 2 ) - 50, 30 );
+        returnCreditButton.setPosition ( ( gamePreferences.getWidthResolution () / 2 ) - 50, 100 );
 
         playButton.addListener( new ChangeListener () {
             @Override public void changed ( ChangeEvent event, Actor actor ) {
@@ -97,6 +99,12 @@ public class MainMenuScreen extends AbstractScreen
         });
 
         returnButton.addListener( new ChangeListener () {
+            @Override public void changed ( ChangeEvent event, Actor actor ) {
+                menuState = MainMenuStateEnum.MENU;
+            }
+        });
+
+        returnCreditButton.addListener( new ChangeListener () {
             @Override public void changed ( ChangeEvent event, Actor actor ) {
                 menuState = MainMenuStateEnum.MENU;
             }
@@ -133,7 +141,7 @@ public class MainMenuScreen extends AbstractScreen
 
         creditsStage.addActor ( new Background () );
         creditsStage.addActor ( new MenuImage ( "img/main-menu/assets/credits.png" ) );
-        creditsStage.addActor ( returnButton );
+        creditsStage.addActor ( returnCreditButton );
 
         levelMusic = Gdx.audio.newMusic ( Gdx.files.internal ( "audio/bg-music-3.mp3" ) );
         levelMusic.setLooping ( true );
