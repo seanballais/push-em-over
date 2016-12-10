@@ -16,6 +16,8 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.peo.core.actors.*;
 import com.peo.core.managers.PlatformManager;
 import com.peo.core.managers.ScreenEnum;
@@ -23,6 +25,7 @@ import com.peo.core.managers.ScreenManager;
 import com.peo.core.managers.TrapManager;
 import com.peo.utils.GamePreferences;
 import com.peo.utils.Physics;
+import com.peo.utils.Rumble;
 
 import java.util.Random;
 
@@ -63,6 +66,7 @@ public class GameScreenWorld
     private Sound hurraySound;
     private Locator player1Locator;
     private Locator player2Locator;
+    private Rumble rumble;
 
     public GameScreenWorld (final Game game )
     {
@@ -70,8 +74,16 @@ public class GameScreenWorld
         gamePreferences = new GamePreferences();
 
         screenState = GameScreenStateEnum.COUNTDOWN;
+        gameCamera = new OrthographicCamera ();
+        gameCamera.setToOrtho ( false, gamePreferences.getWidthResolution (), gamePreferences.getHeightResolution () );
+        gameCamera.position.set (
+                gamePreferences.getWidthResolution () / 2f,
+                gamePreferences.getHeightResolution () / 2f,
+                0
+        );
+        ScreenViewport viewPort = new ScreenViewport ( gameCamera );
 
-        playStage = new Stage ();
+        playStage = new Stage ( viewPort );
         resultStage = new Stage ();
         countdownStage = new Stage ();
         physicsWorld = new World ( new Vector2 ( 0f, -10f ), true );
@@ -87,6 +99,7 @@ public class GameScreenWorld
         scoreboard = new Scoreboard ();
         splatSound = Gdx.audio.newSound ( Gdx.files.internal ( "audio/splat.mp3" ) );
         hurraySound = Gdx.audio.newSound ( Gdx.files.internal ( "audio/hurray.mp3" ) );
+        rumble = new Rumble ();
 
         for ( Controller c : Controllers.getControllers () ) {
             controller = c;
@@ -140,9 +153,6 @@ public class GameScreenWorld
 
         countdownStage.addActor ( new TransparentBackground () );
         countdownStage.addActor ( announcerText );
-
-        gameCamera = new OrthographicCamera ();
-        gameCamera.setToOrtho ( false, gamePreferences.getWidthResolution (), gamePreferences.getHeightResolution () );
 
         deltaTime = 3500f;
 
@@ -336,6 +346,8 @@ public class GameScreenWorld
                 movePlayer1 = true;
                 splatSound.play ( 0.4f );
                 processingP1Hit = true;
+
+                rumble.shake ( 100f, 0.5f );
             }
 
             if ( ( player2.getYPos () < -90 || player2Hit ) && !processingP2Hit ) {
@@ -345,6 +357,8 @@ public class GameScreenWorld
                 movePlayer2 = true;
                 splatSound.play ( 0.4f );
                 processingP2Hit = true;
+
+                rumble.shake ( 100f, 0.5f );
             }
 
             if ( movePlayer1 && processingP1Hit ) {
@@ -391,6 +405,7 @@ public class GameScreenWorld
             trapManager.updateTrapPositions ();
         }
 
+        rumble.update ( 100f, gameCamera );
         gameCamera.update ();
 
         if ( Gdx.input.isKeyPressed ( Input.Keys.ENTER ) && screenState == GameScreenStateEnum.RESULT ) {
@@ -464,5 +479,6 @@ public class GameScreenWorld
     public Stage getResultStage () { return  resultStage; }
     public Stage getCountdownStage () { return countdownStage; }
     public Stage getExitStage () { return exitStage; }
+    public OrthographicCamera getCamera () { return gameCamera; }
     public GameScreenStateEnum getScreenState () { return screenState; }
 }

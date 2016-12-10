@@ -53,6 +53,7 @@ public class PlatformManager
     {
         return highestX;
     }
+    public ArrayList <Platform> getPlatforms () { return platforms; }
 
     public void updatePlatformPositions ()
     {

@@ -28,13 +28,16 @@ public class Platform extends Actor
         platformPhysicsBody = createBody ();
     }
 
+
     @Override public void draw ( Batch batch, float parentAlpha )
     {
         batch.draw ( platformTexture, x - width / 2, y - height / 2 );
     }
 
-    public int setXPos ( int x ) { return this.x = x; }
-    public int setYPos ( int y ) { return this.y = y; }
+    public int getXPos () { return x; }
+    public int getYPos () { return y; }
+    public void setXPos ( int x ) { this.x = x; }
+    public void setYPos ( int y ) { this.y = y; }
     public Body getPlatformPhysicsBody () { return platformPhysicsBody; }
 
     private Body createBody ()

@@ -33,8 +33,10 @@ public class Trap extends Actor
         batch.draw ( trapTexture, x - width / 2, y - height / 2 );
     }
 
-    public int setXPos ( int x ) { return this.x = x; }
-    public int setYPos ( int y ) { return this.y = y; }
+    public void setXPos ( int x ) { this.x = x; }
+    public void setYPos ( int y ) { this.y = y; }
+    public int getXPos () { return x; }
+    public int getYPos () { return y; }
     public Body getTrapPhysicsBody() { return trapPhysicsBody; }
 
     private Body createBody ()
