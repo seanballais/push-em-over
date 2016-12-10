@@ -60,6 +60,7 @@ public class GameScreenWorld
     private Sound splatSound;
     private Sound hurraySound;
     private Locator player1Locator;
+    private Locator player2Locator;
 
     public GameScreenWorld (final Game game )
     {
@@ -107,6 +108,7 @@ public class GameScreenWorld
         );
 
         player1Locator = new Locator ( player1, new Texture ( Gdx.files.internal ( "img/actors/locator.png" ) ) );
+        player2Locator = new Locator ( player2, new Texture ( Gdx.files.internal ( "img/actors/locator-2.png" ) ) );
 
         playStage.addActor ( player1 );
         playStage.addActor ( player2 );
@@ -114,8 +116,9 @@ public class GameScreenWorld
         trapManager = new TrapManager ( physicsWorld );
         trapManager.setTraps ( playStage );
 
-        playStage.addActor ( scoreboard );
         playStage.addActor ( player1Locator );
+        playStage.addActor ( player2Locator );
+        playStage.addActor ( scoreboard );
 
         resultStage.addActor ( new TransparentBackground () );
         resultStage.addActor ( new Title () );

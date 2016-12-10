@@ -1,10 +1,10 @@
 package com.peo.core.actors;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.peo.utils.GamePreferences;
+import com.peo.utils.Util;
 
 public class Locator extends Actor
 {
@@ -34,20 +34,20 @@ public class Locator extends Actor
         if ( playerRef.getYPos () > gamePreferences.getHeightResolution () + 90 || playerRef.getYPos () < -90 ||
              playerRef.getXPos () > gamePreferences.getWidthResolution () + 35 || playerRef.getXPos () < -35 ) {
             // Player is off screen
-            if ( playerRef.getYPos () > gamePreferences.getHeightResolution() ) {
-                y = gamePreferences.getHeightResolution () - 30;
-            } else if ( playerRef.getYPos() < -30 ) {
-                y = 30;
+            if ( playerRef.getYPos () > gamePreferences.getHeightResolution () ) {
+                y = gamePreferences.getHeightResolution () - 35;
+            } else if ( playerRef.getYPos() < 0 ) {
+                y = 10;
             } else {
-                y = playerRef.getYPos ();
+                y = Util.ensureRange ( playerRef.getYPos (), 10, gamePreferences.getHeightResolution () - 35 );
             }
 
-            if ( playerRef.getXPos () < -30 ) {
-                x = 30;
-            } else if ( playerRef.getXPos () > gamePreferences.getWidthResolution () ) {
-                x = gamePreferences.getWidthResolution () - 30;
+            if ( playerRef.getXPos() > gamePreferences.getWidthResolution () ) {
+                x = gamePreferences.getWidthResolution () - 35;
+            } else if ( playerRef.getYPos () < 0 ) {
+                x = 10;
             } else {
-                x = playerRef.getXPos ();
+                x = Util.ensureRange ( playerRef.getXPos (), 10, gamePreferences.getWidthResolution () - 35 );
             }
         }
     }
