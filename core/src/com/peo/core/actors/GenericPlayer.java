@@ -47,8 +47,8 @@ public class GenericPlayer extends Actor
         elapsedTime = 0;
         canFly = true;
         alive = true;
-        playerState = PlayerStateEnum.WALKING;
-        playerSpritesheet = new Texture ( Gdx.files.internal ( "img/actors/player-spritesheet.jpg" ) );
+        playerState = PlayerStateEnum.NEUTRAL;
+        playerSpritesheet = new Texture ( Gdx.files.internal ( "img/actors/player-spritesheet.png" ) );
         playerFuelSheet = new Texture ( Gdx.files.internal ( "img/actors/playerfuel.png" ) );
         animations = new HashMap < String, Object > ();
         playerFuelBar = new HashMap < String, TextureRegion > ();
@@ -75,16 +75,13 @@ public class GenericPlayer extends Actor
 
     @Override public void draw ( Batch batch, float parentAlpha )
     {
-        TextureRegion currFrame = ( TextureRegion ) animations.get ( "walking" );
+        TextureRegion currFrame = ( TextureRegion ) animations.get ( "neutral" );
 
-        // NOTE: PlayerStateEnum.WALKING not checked because it is the default frame already.
-        if ( playerState == PlayerStateEnum.SAD ) {
-            currFrame = ( TextureRegion ) animations.get ( "hit" );
-        } else if ( playerState == PlayerStateEnum.PUNCHING ) {
-            currFrame = ( ( Animation ) animations.get ( "punching" ) ).getKeyFrame ( elapsedTime, true );
-        } else if ( playerState == PlayerStateEnum.FALLING ) {
-            currFrame = ( ( Animation ) animations.get ( "falling" ) ).getKeyFrame ( elapsedTime, true );
+        // NOTE: PlayerStateEnum.NEUTRAL not checked because it is the default frame already.
+        if ( playerState == PlayerStateEnum.DYING ) {
+            currFrame = ( ( Animation ) animations.get ( "dying" ) ).getKeyFrame ( elapsedTime, false );
         }
+
         batch.draw ( currFrame, x - width / 2, y - height / 2 );
         playerTextFont.draw (
                 batch,
@@ -152,37 +149,22 @@ public class GenericPlayer extends Actor
 
     private void setAnimations ()
     {
-        Animation playerPunchingAnimation;
-        Animation playerFallingAnimation;
-        TextureRegion playerSad;
-        TextureRegion playerWalking;
+        Animation playerDying;
+        TextureRegion playerNeutral = new TextureRegion ( playerSpritesheet, 0, 0, 50, 60 );
 
-        // Set up punching animation frames
-        TextureRegion [] punchingFrames = new TextureRegion [ 3 ];
-        for ( int frameCounter = 0; frameCounter < punchingFrames.length; frameCounter++ ) {
-            punchingFrames [ frameCounter ] = new TextureRegion (
-                    playerSpritesheet, frameCounter * width, 0, width, height
+        TextureRegion[] playerDyingFrames = new TextureRegion [ 9 ];
+        for ( int ctr = 0; ctr < playerDyingFrames.length; ctr++ ) {
+            playerDyingFrames [ ctr ] = new TextureRegion (
+                playerSpritesheet,
+                ( ctr * 50 ) + 50,
+                0,
+                50,
+                60
             );
         }
 
-        playerPunchingAnimation = new Animation ( 0.20f, punchingFrames );
-        animations.put ( "punching", playerPunchingAnimation );
-
-        // Set up the falling animation frames
-        TextureRegion [] fallingFrames = new TextureRegion [ 2 ];
-        for ( int frameCounter = 0; frameCounter < fallingFrames.length; frameCounter++ ) {
-            fallingFrames [ frameCounter ] = new TextureRegion (
-                    playerSpritesheet, frameCounter * width, 60, width, height
-            );
-        }
-
-        playerFallingAnimation = new Animation ( 0.150f, fallingFrames );
-        animations.put ( "falling", playerFallingAnimation );
-
-        // Emotions texture regions
-        playerWalking = new TextureRegion ( playerSpritesheet, 0, 120, width, height );
-        playerSad = new TextureRegion ( playerSpritesheet, 50, 120, width, height );
-        animations.put ( "walking", playerWalking );
-        animations.put ( "hit", playerSad );
+        playerDying = new Animation ( 0.20f, playerDyingFrames );
+        animations.put ( "neutral", playerNeutral );
+        animations.put ( "dying", playerDying );
     }
 }

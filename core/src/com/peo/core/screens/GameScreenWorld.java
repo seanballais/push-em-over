@@ -395,7 +395,7 @@ public class GameScreenWorld
         int x1Pos = new Random().nextInt ( 10 ) * ( gamePreferences.getWidthResolution () / 10 );
 
         player1.resurrect ();
-        player1.setPlayerState ( PlayerStateEnum.WALKING );
+        player1.setPlayerState ( PlayerStateEnum.NEUTRAL );
         player1.getPlayerPhysicsBody ().setTransform (
                 ( float ) x1Pos / Physics.PPM,
                 ( float ) gamePreferences.getHeightResolution () / Physics.PPM,
@@ -411,7 +411,7 @@ public class GameScreenWorld
     {
         int x2Pos = new Random().nextInt ( 10 ) * ( gamePreferences.getWidthResolution () / 10 );
         player2.resurrect ();
-        player2.setPlayerState ( PlayerStateEnum.WALKING );
+        player2.setPlayerState ( PlayerStateEnum.NEUTRAL );
         player2.getPlayerPhysicsBody ().setTransform (
                 ( float ) x2Pos / Physics.PPM,
                 ( float ) gamePreferences.getHeightResolution () / Physics.PPM,
