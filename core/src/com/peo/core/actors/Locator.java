@@ -36,11 +36,13 @@ public class Locator extends Actor
             // Player is off screen
             if ( playerRef.getYPos () > gamePreferences.getHeightResolution() ) {
                 y = gamePreferences.getHeightResolution () - 30;
-            } else if ( playerRef.getYPos() < -90 ) {
+            } else if ( playerRef.getYPos() < -30 ) {
                 y = 30;
+            } else {
+                y = playerRef.getYPos ();
             }
 
-            if ( playerRef.getXPos () < -35 ) {
+            if ( playerRef.getXPos () < -30 ) {
                 x = 30;
             } else if ( playerRef.getXPos () > gamePreferences.getWidthResolution () ) {
                 x = gamePreferences.getWidthResolution () - 30;

@@ -338,14 +338,14 @@ public class GameScreenWorld
                 player1Hit = false;
                 resetPlayer1 ();
 
-                splatSound.play ( 0.7f );
+                splatSound.play ( 0.4f );
             }
 
             if ( movePlayer2 ) {
                 player2Hit = false;
                 resetPlayer2 ();
 
-                splatSound.play ( 0.7f );
+                splatSound.play ( 0.4f );
             }
 
             if ( p1Score == 15 || p2Score == 15 ) {
@@ -378,6 +378,7 @@ public class GameScreenWorld
             scoreboard.setPlayer2 ( 0 );
             p1Score = 0;
             p2Score = 0;
+            hurraySound.stop ();
         }
 
         if ( Gdx.input.isKeyPressed ( Input.Keys.ESCAPE ) ) {
