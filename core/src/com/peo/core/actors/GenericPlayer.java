@@ -101,7 +101,11 @@ public class GenericPlayer extends Actor
 
     @Override public void act ( float delta )
     {
-        elapsedTime += Gdx.graphics.getDeltaTime ();
+        if ( playerState == PlayerStateEnum.DYING ) {
+            elapsedTime += Gdx.graphics.getDeltaTime ();
+        } else if ( playerState == PlayerStateEnum.NEUTRAL ) {
+            elapsedTime = 0;
+        }
 
         if ( fuelLength >= 100 ) {
             canFly = true;
@@ -168,7 +172,7 @@ public class GenericPlayer extends Actor
             );
         }
 
-        playerDying = new Animation ( 0.50f, playerDyingFrames );
+        playerDying = new Animation ( 0.1f, playerDyingFrames );
         animations.put ( "neutral", playerNeutral );
         animations.put ( "dying", playerDying );
     }

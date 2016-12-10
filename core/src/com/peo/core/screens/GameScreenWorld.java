@@ -404,6 +404,12 @@ public class GameScreenWorld
             p1Score = 0;
             p2Score = 0;
             hurraySound.stop ();
+            player1Hit = false;
+            player2Hit = false;
+            processingP1Hit = false;
+            processingP2Hit = false;
+            player1.resetTime ();
+            player2.resetTime ();
         }
 
         if ( Gdx.input.isKeyPressed ( Input.Keys.ESCAPE ) ) {
@@ -420,7 +426,7 @@ public class GameScreenWorld
         player1.setPlayerState ( PlayerStateEnum.NEUTRAL );
         player1.getPlayerPhysicsBody ().setTransform (
                 ( float ) x1Pos / Physics.PPM,
-                ( float ) gamePreferences.getHeightResolution () / Physics.PPM,
+                ( float ) ( gamePreferences.getHeightResolution () + 300 ) / Physics.PPM,
                 player1.getPlayerPhysicsBody ().getAngle ()
         );
         player1.setYPos ( Math.round ( player1.getPlayerPhysicsBody ().getPosition ().y ) );
@@ -436,7 +442,7 @@ public class GameScreenWorld
         player2.setPlayerState ( PlayerStateEnum.NEUTRAL );
         player2.getPlayerPhysicsBody ().setTransform (
                 ( float ) x2Pos / Physics.PPM,
-                ( float ) gamePreferences.getHeightResolution () / Physics.PPM,
+                ( float ) ( gamePreferences.getHeightResolution () + 300 ) / Physics.PPM,
                 player1.getPlayerPhysicsBody ().getAngle ()
         );
         player2.setYPos ( Math.round ( player2.getPlayerPhysicsBody ().getPosition ().y ) );
