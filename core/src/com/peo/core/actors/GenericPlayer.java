@@ -113,6 +113,7 @@ public class GenericPlayer extends Actor
         return playerPhysicsBody;
     }
     public int getYPos () { return y; }
+    public int getXPos () { return x; }
 
     private Body createBody ()
     {

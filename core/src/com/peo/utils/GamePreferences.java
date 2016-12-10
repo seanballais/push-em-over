@@ -140,12 +140,12 @@ public class GamePreferences
 
     public int getWidthResolution ()
     {
-        return prefs.getInteger ( "res_width", 1366 );
+        return prefs.getInteger ( "res_width", Gdx.graphics.getWidth () );
     }
 
     public int getHeightResolution ()
     {
-        return prefs.getInteger ( "res_height", 768 );
+        return prefs.getInteger ( "res_height", Gdx.graphics.getHeight () );
     }
 
     public boolean isFullscreen ()

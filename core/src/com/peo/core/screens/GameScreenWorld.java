@@ -59,6 +59,7 @@ public class GameScreenWorld
     private Scoreboard scoreboard;
     private Sound splatSound;
     private Sound hurraySound;
+    private Locator player1Locator;
 
     public GameScreenWorld (final Game game )
     {
@@ -105,6 +106,8 @@ public class GameScreenWorld
                 gamePreferences.getHeightResolution () + 50
         );
 
+        player1Locator = new Locator ( player1, new Texture ( Gdx.files.internal ( "img/actors/locator.png" ) ) );
+
         playStage.addActor ( player1 );
         playStage.addActor ( player2 );
 
@@ -112,6 +115,7 @@ public class GameScreenWorld
         trapManager.setTraps ( playStage );
 
         playStage.addActor ( scoreboard );
+        playStage.addActor ( player1Locator );
 
         resultStage.addActor ( new TransparentBackground () );
         resultStage.addActor ( new Title () );
