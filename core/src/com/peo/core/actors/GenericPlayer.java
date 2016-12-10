@@ -31,7 +31,7 @@ public class GenericPlayer extends Actor
     private World physicsWorldRef;
     private Body playerPhysicsBody;
 
-    public GenericPlayer ( World physicsWorldRef, String playerName, Color playerTextColor, int x, int y )
+    public GenericPlayer ( World physicsWorldRef, String playerName, Color playerTextColor, int x, int y, Texture texture )
     {
         this.x = x;
         this.y = y;
@@ -48,7 +48,7 @@ public class GenericPlayer extends Actor
         canFly = true;
         alive = true;
         playerState = PlayerStateEnum.NEUTRAL;
-        playerSpritesheet = new Texture ( Gdx.files.internal ( "img/actors/player-spritesheet.png" ) );
+        playerSpritesheet = texture;
         playerFuelSheet = new Texture ( Gdx.files.internal ( "img/actors/playerfuel.png" ) );
         animations = new HashMap < String, Object > ();
         playerFuelBar = new HashMap < String, TextureRegion > ();
@@ -65,13 +65,18 @@ public class GenericPlayer extends Actor
     }
     public void setXPos ( int x ) { this.x = x; }
     public void setYPos ( int y ) { this.y = y; }
-    public void setCanFly ( boolean flyState ) { canFly = flyState; }
     public void setFuelLength ( int length ) { fuelLength = length; }
     public void kill () { alive = false; }
     public void resurrect () { alive = true; }
     public int getFuelLength () { return fuelLength; }
     public boolean isCanFly () { return canFly; }
     public boolean isAlive () { return alive; }
+    public void resetTime () { elapsedTime = 0; }
+
+    public boolean isAnimationDone ()
+    {
+        return ( ( Animation ) animations.get ( "dying" ) ).isAnimationFinished ( elapsedTime );
+    }
 
     @Override public void draw ( Batch batch, float parentAlpha )
     {
@@ -163,7 +168,7 @@ public class GenericPlayer extends Actor
             );
         }
 
-        playerDying = new Animation ( 0.20f, playerDyingFrames );
+        playerDying = new Animation ( 0.50f, playerDyingFrames );
         animations.put ( "neutral", playerNeutral );
         animations.put ( "dying", playerDying );
     }

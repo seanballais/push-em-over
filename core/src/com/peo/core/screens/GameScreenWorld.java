@@ -54,6 +54,8 @@ public class GameScreenWorld
     private boolean exitDialogShowing;
     private boolean player1Hit;
     private boolean player2Hit;
+    private boolean processingP1Hit;
+    private boolean processingP2Hit;
     private Controller controller;
     private final Game game;
     private Scoreboard scoreboard;
@@ -80,6 +82,8 @@ public class GameScreenWorld
         movePlayer2 = false;
         player1Hit = false;
         player2Hit = false;
+        processingP1Hit = false;
+        processingP2Hit = false;
         scoreboard = new Scoreboard ();
         splatSound = Gdx.audio.newSound ( Gdx.files.internal ( "audio/splat.mp3" ) );
         hurraySound = Gdx.audio.newSound ( Gdx.files.internal ( "audio/hurray.mp3" ) );
@@ -99,12 +103,14 @@ public class GameScreenWorld
         player1 = new GenericPlayer (
                 physicsWorld, "Bob", new Color ( 0f, 102/255f, 204/255f, 1f ),
                 p1XPos,
-                gamePreferences.getHeightResolution () + 50
+                gamePreferences.getHeightResolution () + 50,
+                new Texture ( Gdx.files.internal ( "img/actors/player-spritesheet.png" ) )
         );
         player2 = new GenericPlayer (
                 physicsWorld, "Joe", new Color ( 0f, 102/255f, 204/255f, 1f ),
                 p2XPos,
-                gamePreferences.getHeightResolution () + 50
+                gamePreferences.getHeightResolution () + 50,
+                new Texture ( Gdx.files.internal ( "img/actors/player-spritesheet-2.png" ) )
         );
 
         player1Locator = new Locator ( player1, new Texture ( Gdx.files.internal ( "img/actors/locator.png" ) ) );
@@ -212,10 +218,10 @@ public class GameScreenWorld
             screenState = GameScreenStateEnum.PLAY;
         }
 
-        if ( player1.isAlive () && player2.isAlive () && screenState != GameScreenStateEnum.COUNTDOWN && screenState != GameScreenStateEnum.RESULT ) {
+        if ( screenState != GameScreenStateEnum.COUNTDOWN && screenState != GameScreenStateEnum.RESULT ) {
             float impulse = player1.getPlayerPhysicsBody ().getMass () * 0.30f;
 
-            if ( controller != null ) {
+            if ( controller != null && player1.isAlive () ) {
                 if ( controller.getAxis ( 0 ) <= -1.0f ) {
                     player1.getPlayerPhysicsBody ().applyLinearImpulse (
                             new Vector2 ( -impulse, 0 ),
@@ -251,7 +257,7 @@ public class GameScreenWorld
                 }
             }
 
-            if ( controller == null && Gdx.input.isKeyPressed ( GamePreferences.getInstance().getLeftKey ( 0 ) ) ) {
+            if ( controller == null && Gdx.input.isKeyPressed ( GamePreferences.getInstance().getLeftKey ( 0 ) ) && player1.isAlive () ) {
                 player1.getPlayerPhysicsBody ().applyLinearImpulse (
                         new Vector2 ( -impulse, 0 ),
                         player1.getPlayerPhysicsBody ().getWorldCenter (),
@@ -259,7 +265,7 @@ public class GameScreenWorld
                 );
             }
 
-            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getLeftKey ( 1 ) ) ) {
+            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getLeftKey ( 1 ) ) && player2.isAlive () ) {
                 player2.getPlayerPhysicsBody ().applyLinearImpulse (
                         new Vector2 ( -impulse, 0 ),
                         player2.getPlayerPhysicsBody ().getWorldCenter (),
@@ -267,7 +273,7 @@ public class GameScreenWorld
                 );
             }
 
-            if ( controller == null && Gdx.input.isKeyPressed ( GamePreferences.getInstance().getRightKey ( 0 ) ) ) {
+            if ( controller == null && Gdx.input.isKeyPressed ( GamePreferences.getInstance().getRightKey ( 0 ) ) && player1.isAlive () ) {
                 player1.getPlayerPhysicsBody ().applyLinearImpulse (
                         new Vector2 ( impulse, 0 ),
                         player1.getPlayerPhysicsBody ().getWorldCenter (),
@@ -275,7 +281,7 @@ public class GameScreenWorld
                 );
             }
 
-            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getRightKey ( 1 ) ) ) {
+            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getRightKey ( 1 ) ) && player2.isAlive () ) {
                 player2.getPlayerPhysicsBody ().applyLinearImpulse (
                         new Vector2 ( impulse, 0 ),
                         player2.getPlayerPhysicsBody ().getWorldCenter (),
@@ -283,7 +289,7 @@ public class GameScreenWorld
                 );
             }
 
-            if ( controller == null && Gdx.input.isKeyPressed ( GamePreferences.getInstance().getJumpKey ( 0 ) ) ) {
+            if ( controller == null && Gdx.input.isKeyPressed ( GamePreferences.getInstance().getJumpKey ( 0 ) ) && player1.isAlive () ) {
                 if ( player1.getFuelLength () < 100 && !player1.isCanFly () ) {
                     player1.setFuelLength ( Math.min ( player1.getFuelLength () + 1, 100 ) );
                 } else if ( player1.isCanFly () ) {
@@ -297,7 +303,7 @@ public class GameScreenWorld
                 }
             }
 
-            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getJumpKey ( 1 ) ) ) {
+            if ( Gdx.input.isKeyPressed ( GamePreferences.getInstance().getJumpKey ( 1 ) ) && player2.isAlive () ) {
                 if ( player2.getFuelLength () < 100 && !player2.isCanFly () ) {
                     player2.setFuelLength ( Math.min ( player2.getFuelLength () + 1, 100 ) );
                 } else if ( player2.isCanFly () ) {
@@ -323,32 +329,46 @@ public class GameScreenWorld
                 }
             }
 
-            if ( player1.getYPos () < -90 || player1Hit ) {
+            if ( ( player1.getYPos () < -90 || player1Hit ) && !processingP1Hit ) {
                 player1.kill ();
                 p2Score++;
                 scoreboard.setPlayer2 ( p2Score );
                 movePlayer1 = true;
+                splatSound.play ( 0.4f );
+                processingP1Hit = true;
             }
 
-            if ( player2.getYPos () < -90 || player2Hit ) {
+            if ( ( player2.getYPos () < -90 || player2Hit ) && !processingP2Hit ) {
                 player2.kill ();
                 p1Score++;
                 scoreboard.setPlayer1 ( p1Score );
                 movePlayer2 = true;
+                splatSound.play ( 0.4f );
+                processingP2Hit = true;
             }
 
-            if ( movePlayer1 ) {
-                player1Hit = false;
-                resetPlayer1 ();
+            if ( movePlayer1 && processingP1Hit ) {
+                player1.setPlayerState ( PlayerStateEnum.DYING );
 
-                splatSound.play ( 0.4f );
+                if ( player1.isAnimationDone () ) {
+                    player1Hit = false;
+                    resetPlayer1 ();
+                    player1.setPlayerState ( PlayerStateEnum.NEUTRAL );
+                    processingP1Hit = false;
+                    player1.resetTime ();
+                }
             }
 
-            if ( movePlayer2 ) {
-                player2Hit = false;
-                resetPlayer2 ();
+            if ( movePlayer2 && processingP2Hit ) {
+                player2.setPlayerState ( PlayerStateEnum.DYING );
 
-                splatSound.play ( 0.4f );
+                if ( player2.isAnimationDone () ) {
+                    player2Hit = false;
+                    resetPlayer2 ();
+                    player2.setPlayerState ( PlayerStateEnum.NEUTRAL );
+                    processingP2Hit = false;
+                    player2.resetTime ();
+                }
             }
 
             if ( p1Score == 15 || p2Score == 15 ) {
@@ -376,6 +396,8 @@ public class GameScreenWorld
         if ( Gdx.input.isKeyPressed ( Input.Keys.ENTER ) && screenState == GameScreenStateEnum.RESULT ) {
             resetPlayer1 ();
             resetPlayer2 ();
+            player1.setPlayerState ( PlayerStateEnum.NEUTRAL );
+            player2.setPlayerState ( PlayerStateEnum.NEUTRAL );
             reset ();
             scoreboard.setPlayer1 ( 0 );
             scoreboard.setPlayer2 ( 0 );
