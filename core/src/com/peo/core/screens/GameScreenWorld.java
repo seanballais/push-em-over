@@ -17,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.peo.core.actors.*;
 import com.peo.core.managers.PlatformManager;
 import com.peo.core.managers.ScreenEnum;
@@ -25,7 +24,6 @@ import com.peo.core.managers.ScreenManager;
 import com.peo.core.managers.TrapManager;
 import com.peo.utils.GamePreferences;
 import com.peo.utils.Physics;
-import com.peo.utils.Rumble;
 
 import java.util.Random;
 
@@ -66,7 +64,8 @@ public class GameScreenWorld
     private Sound hurraySound;
     private Locator player1Locator;
     private Locator player2Locator;
-    private Rumble rumble;
+    private FitViewport viewport;
+    private Random random;
 
     public GameScreenWorld (final Game game )
     {
@@ -76,14 +75,21 @@ public class GameScreenWorld
         screenState = GameScreenStateEnum.COUNTDOWN;
         gameCamera = new OrthographicCamera ();
         gameCamera.setToOrtho ( false, gamePreferences.getWidthResolution (), gamePreferences.getHeightResolution () );
+        viewport = new FitViewport (
+            gamePreferences.getWidthResolution (),
+            gamePreferences.getHeightResolution (),
+            gameCamera
+        );
+        viewport.setScreenPosition ( 0, 0 );
         gameCamera.position.set (
                 gamePreferences.getWidthResolution () / 2f,
                 gamePreferences.getHeightResolution () / 2f,
                 0
         );
-        ScreenViewport viewPort = new ScreenViewport ( gameCamera );
 
-        playStage = new Stage ( viewPort );
+        random = new Random ();
+
+        playStage = new Stage ( viewport );
         resultStage = new Stage ();
         countdownStage = new Stage ();
         physicsWorld = new World ( new Vector2 ( 0f, -10f ), true );
@@ -99,7 +105,6 @@ public class GameScreenWorld
         scoreboard = new Scoreboard ();
         splatSound = Gdx.audio.newSound ( Gdx.files.internal ( "audio/splat.mp3" ) );
         hurraySound = Gdx.audio.newSound ( Gdx.files.internal ( "audio/hurray.mp3" ) );
-        rumble = new Rumble ();
 
         for ( Controller c : Controllers.getControllers () ) {
             controller = c;
@@ -116,13 +121,13 @@ public class GameScreenWorld
         player1 = new GenericPlayer (
                 physicsWorld, "Bob", new Color ( 0f, 102/255f, 204/255f, 1f ),
                 p1XPos,
-                gamePreferences.getHeightResolution () + 50,
+                gamePreferences.getHeightResolution () + 300,
                 new Texture ( Gdx.files.internal ( "img/actors/player-spritesheet.png" ) )
         );
         player2 = new GenericPlayer (
                 physicsWorld, "Joe", new Color ( 0f, 102/255f, 204/255f, 1f ),
                 p2XPos,
-                gamePreferences.getHeightResolution () + 50,
+                gamePreferences.getHeightResolution () + 300,
                 new Texture ( Gdx.files.internal ( "img/actors/player-spritesheet-2.png" ) )
         );
 
@@ -168,6 +173,8 @@ public class GameScreenWorld
                     ScreenManager.getInstance ().show ( ScreenEnum.MAIN_SCREEN, game );
                     levelMusic.stop ();
                     levelMusic.dispose ();
+                    hurraySound.stop ();
+                    hurraySound.dispose ();
                 }
             }
 
@@ -258,7 +265,7 @@ public class GameScreenWorld
                                 true
                         );
 
-                        player1.setFuelLength ( Math.max ( player1.getFuelLength () - 2, 0 ) );
+                        player1.setFuelLength ( Math.max ( player1.getFuelLength () - ( random.nextInt ( 3 ) + 3 ), 0 ) );
                     }
                 } else {
                     if ( player1.getFuelLength () < 100 ) {
@@ -309,7 +316,7 @@ public class GameScreenWorld
                             true
                     );
 
-                    player1.setFuelLength ( Math.max ( player1.getFuelLength () - 2, 0 ) );
+                    player1.setFuelLength ( Math.max ( player1.getFuelLength () - ( random.nextInt ( 3 ) + 3 ), 0 ) );
                 }
             }
 
@@ -323,7 +330,7 @@ public class GameScreenWorld
                             true
                     );
 
-                    player2.setFuelLength ( Math.max ( player2.getFuelLength () - 2, 0 ) );
+                    player2.setFuelLength ( Math.max ( player2.getFuelLength () - ( random.nextInt ( 3 ) + 3 ), 0 ) );
                 }
             }
 
@@ -346,8 +353,6 @@ public class GameScreenWorld
                 movePlayer1 = true;
                 splatSound.play ( 0.4f );
                 processingP1Hit = true;
-
-                rumble.shake ( 100f, 0.5f );
             }
 
             if ( ( player2.getYPos () < -90 || player2Hit ) && !processingP2Hit ) {
@@ -357,8 +362,6 @@ public class GameScreenWorld
                 movePlayer2 = true;
                 splatSound.play ( 0.4f );
                 processingP2Hit = true;
-
-                rumble.shake ( 100f, 0.5f );
             }
 
             if ( movePlayer1 && processingP1Hit ) {
@@ -405,7 +408,6 @@ public class GameScreenWorld
             trapManager.updateTrapPositions ();
         }
 
-        rumble.update ( 100f, gameCamera );
         gameCamera.update ();
 
         if ( Gdx.input.isKeyPressed ( Input.Keys.ENTER ) && screenState == GameScreenStateEnum.RESULT ) {
@@ -481,4 +483,5 @@ public class GameScreenWorld
     public Stage getExitStage () { return exitStage; }
     public OrthographicCamera getCamera () { return gameCamera; }
     public GameScreenStateEnum getScreenState () { return screenState; }
+    public FitViewport getViewport () { return viewport; }
 }

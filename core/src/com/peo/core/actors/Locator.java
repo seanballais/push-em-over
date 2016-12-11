@@ -44,7 +44,7 @@ public class Locator extends Actor
 
             if ( playerRef.getXPos() > gamePreferences.getWidthResolution () ) {
                 x = gamePreferences.getWidthResolution () - 35;
-            } else if ( playerRef.getYPos () < 0 ) {
+            } else if ( playerRef.getXPos () < 0 ) {
                 x = 10;
             } else {
                 x = Util.ensureRange ( playerRef.getXPos (), 10, gamePreferences.getWidthResolution () - 35 );

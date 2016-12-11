@@ -2,11 +2,13 @@ package com.peo.core.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.peo.utils.GamePreferences;
 
 public class GameScreen extends AbstractScreen
 {
     private GameScreenWorld gameWorld;
     private GameScreenRenderer gameRenderer;
+    private GamePreferences gamePreferences;
 
     public GameScreen ( Game game )
     {
@@ -19,6 +21,8 @@ public class GameScreen extends AbstractScreen
             gameWorld.getResultStage (),
             gameWorld.getCountdownStage ()
         );
+
+        gamePreferences = new GamePreferences ();
     }
 
     @Override public void render ( float delta )
@@ -29,7 +33,8 @@ public class GameScreen extends AbstractScreen
 
     @Override public void resize ( int width, int height )
     {
-        Gdx.app.log ( "GameScreen", "resize () called" );
+        gamePreferences.setWidthResolution ( width );
+        gamePreferences.setHeightResolution ( height );
     }
 
     @Override public void show ()

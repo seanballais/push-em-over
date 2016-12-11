@@ -18,6 +18,7 @@ public class GameScreenRenderer
     private Stage playStage;
     private Stage resultStage;
     private Stage countdownStage;
+    private GamePreferences gamePreferences;
 
     public GameScreenRenderer ( GameScreenWorld gameWorld, Stage playStage, Stage resultStage, Stage countdownStage )
     {
@@ -27,12 +28,19 @@ public class GameScreenRenderer
         this.playStage = playStage;
         this.resultStage = resultStage;
         this.countdownStage = countdownStage;
+        gamePreferences = new GamePreferences ();
     }
 
     public void render ()
     {
         Gdx.gl.glClearColor ( 0, 0, 0, 1 );
         Gdx.gl.glClear ( GL20.GL_COLOR_BUFFER_BIT );
+
+        gameWorld.getViewport ().update (
+            gamePreferences.getWidthResolution (),
+            gamePreferences.getHeightResolution (),
+            true
+        );
 
         if ( gameWorld.getScreenState () == GameScreenStateEnum.COUNTDOWN ) {
             playStage.draw ();
