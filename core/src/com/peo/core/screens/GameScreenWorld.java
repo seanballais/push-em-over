@@ -9,13 +9,14 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.peo.core.actors.*;
 import com.peo.core.managers.PlatformManager;
@@ -111,7 +112,7 @@ public class GameScreenWorld
         }
 
         background = new Background ();
-        playStage.addActor ( background );
+        //playStage.addActor ( background );
 
         platformManager = new PlatformManager ( physicsWorld );
         platformManager.setPlatforms ( playStage );
@@ -161,12 +162,46 @@ public class GameScreenWorld
 
         deltaTime = 3500f;
 
+        Skin dialogSkin = new Skin ();
+
+        Pixmap pixmap = new Pixmap ( 100, 50, Pixmap.Format.RGBA8888 );
+        pixmap.setColor ( new Color ( 111/255f, 169/255f, 235/255f, 1 ) );
+        pixmap.fill ();
+
+        dialogSkin.add ( "blue", new Texture ( pixmap ) );
+
+        BitmapFont font = new BitmapFont ();
+        font.getData ().setScale ( 1.5f );
+
+        dialogSkin.add ( "default", font );
+
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle ();
+        textButtonStyle.up = dialogSkin.newDrawable ( "blue", new Color ( 111/255f, 169/255f, 235/255f, 1 ) );
+        textButtonStyle.down = dialogSkin.newDrawable ( "blue", new Color ( 111/255f, 169/255f, 235/255f, 1 ) );
+        textButtonStyle.checked = dialogSkin.newDrawable ( "blue", new Color ( 111/255f, 169/255f, 235/255f, 1 ) );
+        textButtonStyle.over = dialogSkin.newDrawable ( "blue", Color.LIGHT_GRAY );
+        textButtonStyle.font = dialogSkin.getFont ( "default" );
+
+        dialogSkin.add ( "default", textButtonStyle );
+
+        Window.WindowStyle windowStyle = new Window.WindowStyle ();
+        windowStyle.titleFont = font;
+        windowStyle.background = dialogSkin.newDrawable ( "blue", new Color ( 111/255f, 169/255f, 235/255f, 1 ) );
+        windowStyle.stageBackground = dialogSkin.newDrawable ( "blue", new Color ( 111/255f, 169/255f, 235/255f, 1 ) );
+        windowStyle.titleFontColor = Color.WHITE;
+
+        dialogSkin.add ( "default", windowStyle );
+
+        Label.LabelStyle label = new Label.LabelStyle ();
+        label.background = dialogSkin.newDrawable ( "blue", new Color ( 111/255f, 169/255f, 235/255f, 1 ) );
+        label.font = font;
+        label.fontColor = Color.WHITE;
+
+        dialogSkin.add ( "default", label );
+
         exitDialog = new Dialog (
-            "Confirm Exit...",
-            new Skin (
-                Gdx.files.internal ( "skins/x2/uiskin.json" ),
-                new TextureAtlas ( Gdx.files.internal ( "skins/x2/uiskin.atlas" ) )
-            )
+            "",
+            dialogSkin
         ) {
             @Override protected void result ( Object object ) {
                 if ( ( Boolean ) object ) {
@@ -180,7 +215,7 @@ public class GameScreenWorld
 
             @Override
             public float getPrefHeight() {
-                return 550f;
+                return 100f;
             }
         }.text ( "Are you sure you want to exit?" )
          .button ( "Exit", true )

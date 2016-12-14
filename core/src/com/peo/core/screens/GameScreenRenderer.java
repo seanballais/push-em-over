@@ -33,7 +33,7 @@ public class GameScreenRenderer
 
     public void render ()
     {
-        Gdx.gl.glClearColor ( 0, 0, 0, 1 );
+        Gdx.gl.glClearColor ( 111/255f, 169/255f, 235/255f, 1 );
         Gdx.gl.glClear ( GL20.GL_COLOR_BUFFER_BIT );
 
         gameWorld.getViewport ().update (
